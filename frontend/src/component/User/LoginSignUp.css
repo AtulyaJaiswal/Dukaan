@@ -1,0 +1,49 @@
+.LoginSignUpContainer {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(231, 231, 231);
+    /* position: fixed;
+    top: 0%;
+    left: 0; */
+  }
+  
+  .LoginSignUpBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 25vw;
+    height: 30vh;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .login > button{
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .login > button > img {
+    height: 2rem;
+    width: 2rem;
+    margin-right: 2rem;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .LoginSignUpContainer {
+      background-color: white;
+    }
+    .LoginSignUpBox {
+      width: 100vw;
+      height: 95vh;
+    }
+  }
