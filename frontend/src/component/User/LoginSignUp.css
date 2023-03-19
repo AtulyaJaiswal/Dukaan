@@ -1,49 +1,113 @@
+.loginForm, .signUpForm{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loginForm > button, .signUpForm > button{
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.google_image{
+  height: 2rem;
+  width: 2rem;
+  margin-right: 2rem;
+}
 .LoginSignUpContainer {
-    width: 100vw;
-    height: 100vh;
-    max-width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(231, 231, 231);
-    /* position: fixed;
-    top: 0%;
-    left: 0; */
-  }
-  
-  .LoginSignUpBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(231, 231, 231);
+  /* position: fixed;
+  top: 0%;
+  left: 0; */
+}
+
+.LoginSignUpBox {
+  background-color: white;
+  width: 25vw;
+  height: 70vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.login_signUp_toggle {
+  display: flex;
+  height: 3vmax;
+}
+.login_signUp_toggle > p {
+  color: rgba(0, 0, 0, 0.678);
+  font: 300 1vmax "Roboto";
+  transition: all 0.5s;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+.login_signUp_toggle > p:hover {
+  color: rgba(8, 8, 211, 0.781);;
+}
+
+.toogle {
+  background-color: rgba(8, 8, 211, 0.781);;
+  height: 3px;
+  width: 50%;
+  border: none;
+  transition: all 0.5s;
+}
+
+.loginForm,
+.signUpForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  padding: 2vmax;
+  justify-content: space-evenly;
+  height: 70%;
+  transition: all 0.5s;
+}
+
+.signUpForm {
+  transform: translateY(-100%) translateX(-100vmax);
+}
+
+.shiftToLeft {
+  transform: translateX(-100%);
+}
+.shiftToNeutral {
+  transform: translateX(0%);
+}
+
+.shiftToNeutralForm {
+  transform: translateX(0%) translateY(-100%);
+}
+
+.shiftToRight {
+  transform: translateX(100%);
+}
+
+@media screen and (max-width: 600px) {
+  .LoginSignUpContainer {
     background-color: white;
-    width: 25vw;
-    height: 30vh;
-    box-sizing: border-box;
-    overflow: hidden;
+    height: 80vh;
   }
-  .login{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .LoginSignUpBox {
+    width: 100vw;
+    /* height: 95vh; */
   }
-  .login > button{
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-    cursor: pointer;
+  .login_signUp_toggle {
+    height: 5vmax;
   }
-  .login > button > img {
-    height: 2rem;
-    width: 2rem;
-    margin-right: 2rem;
+  .login_signUp_toggle > p {
+    font: 300 1.5vmax "Roboto";
   }
-  
-  @media screen and (max-width: 600px) {
-    .LoginSignUpContainer {
-      background-color: white;
-    }
-    .LoginSignUpBox {
-      width: 100vw;
-      height: 95vh;
-    }
+
+  .loginForm,
+  .signUpForm {
+    padding: 5vmax;
   }
+}
