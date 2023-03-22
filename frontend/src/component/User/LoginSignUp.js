@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useEffect } from "react";
+import React, { Fragment, useRef, useState, useEffect } from "react";
 import "./LoginSignUp.css";
 import Loader from "../layout/Loader/Loader";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, login, register } from "../../actions/userAction";
 import { toast } from "react-toastify";
 import {auth, provider} from "../../firebase";
+import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
+import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
+import FaceIcon from '@mui/icons-material/Face';
 
 const LoginSignUp = () => {
 
@@ -16,6 +19,30 @@ const LoginSignUp = () => {
   const { error, loading, isAuthenticated } = useSelector(
     (state) => state.user
   );
+
+  const [sentOtp, setSentOtp] = useState();
+  const [userEnteredOtp, setUserEnteredOtp] = useState();
+  const [email,setEmail] = useState("");
+
+  const sendOtp = (e) => {
+    e.preventDefault();
+    if(email.trim()!==""){
+      const otp = Math.floor(100000 + Math.random() * 900000);
+      setSentOtp(otp);
+      dispatch(sendOtp(otp));
+    }
+    else{
+      toast.error("Enter email properly");
+    }
+  }
+  const verifyOtp = () => {
+    if(userEnteredOtp===sentOtp){
+      toast.success("OTP verified successfully");
+    }
+    else{
+      toast.error("Wrong OTP entered");
+    }
+  }
 
   const loginTab = useRef(null);
   const registerTab = useRef(null);
@@ -113,6 +140,28 @@ const LoginSignUp = () => {
                     />
                     Sign up with Google
                 </button>
+                {/* <div className="signUpEmail">
+                  <MailOutlinedIcon />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <button onClick={sendOtp}>Send OTP</button>
+                </div>
+                <div className="signUpEmail">
+                  <MailOutlinedIcon />
+                  <input
+                    type="number"
+                    placeholder="Enter OTP"
+                    required
+                    value={userEnteredOtp}
+                    onChange={(e) => setUserEnteredOtp(e.target.value)}
+                  />
+                  <button onClick={verifyOtp}>Send OTP</button>
+                </div> */}
               </div>
             </div>
           </div>

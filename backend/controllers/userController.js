@@ -1,6 +1,7 @@
 const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const User = require('../models/userModel');
+const UserPassword = require('../models/userModel2');
 const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
@@ -8,6 +9,28 @@ const cloudinary = require("cloudinary").v2;
 
 //REGISTER USER
 exports.registerUser = catchAsyncErrors(async(req,res,next) => {
+
+    const { name,email,avatar} = req.body; 
+    
+    const userExist = await User.findOne({ email }); 
+
+    if(userExist){
+        return next(new ErrorHandler("User already registered, try logging in",401));
+    }
+
+    const user = await User.create({
+        name,email,
+        avatar:{
+            public_id: avatar,
+            url: avatar,
+        }
+    });
+
+    sendToken(user,201,res);
+});
+
+//REGISTER USER-PASSWORD
+exports.registerUserPassword = catchAsyncErrors(async(req,res,next) => {
 
     const { name,email,avatar} = req.body; 
     
@@ -57,24 +80,36 @@ exports.logout = catchAsyncErrors(async (req,res,next) =>{
 });
 
 //FORGOT PASSWORD
-exports.forgotPassword = catchAsyncErrors(async (req,res,next) => {
-    const user = await User.findOne({email: req.body.email});
+exports.sendOtp = catchAsyncErrors(async (req,res,next) => {
 
-    if(!user){
-        return next(new ErrorHandler("User not found", 404));
+    let message = "";
+
+    if(req.body.str==="forgot"){
+        const user = await User.findOne({email: req.body.email});
+
+        if(!user){
+            return next(new ErrorHandler("User not found", 404));
+        }
+
+        //GET ResetPasswordToken
+        const resetToken = user.getResetPasswordToken();
+
+        await user.save({validateBeforeSave: false});
+
+        const resetPasswordUrl = `${req.protocol}://${req.get("host")}/password/reset/${resetToken}`;    
+        
+        //MESSAGE TO BE SENT ON EMAIL
+        message = `Your Password reset token is :- \n
+        \n ${resetPasswordUrl} \n
+        \n If you have not requested this email, please ignore it`;
     }
 
-    //GET ResetPasswordToken
-    const resetToken = user.getResetPasswordToken();
-
-    await user.save({validateBeforeSave: false});
-
-    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/password/reset/${resetToken}`;    
-    
-   //MESSAGE TO BE SENT ON EMAIL
-   const message = `Your Password reset token is :- \n
-   \n ${resetPasswordUrl} \n
-   \n If you have not requested this email, please ignore it`;
+    if(req.body.str==="otp"){   
+        
+        //MESSAGE TO BE SENT ON EMAIL
+        message = `Your OTP for registration is :- ${otp}
+        \n If you have not requested this email, please ignore it`;
+    }
    
    try {
 
@@ -85,14 +120,10 @@ exports.forgotPassword = catchAsyncErrors(async (req,res,next) => {
         });
         res.status(200).json({
             success:true,
-            message: `Email sent to ${user.email} successfully`
+            message: `Email sent successfully`
         });
     
    } catch (error) {
-        user.resetPasswordToken=d=undefined;
-        user.resetPasswordExpire=undefined;
-        await user.save({validateBeforeSave: false});
-
         return next(new ErrorHandler(error.message, 500));
    }
 });

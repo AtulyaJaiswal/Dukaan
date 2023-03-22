@@ -5,6 +5,9 @@ import {
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAIL,
+  SEND_OTP_REQUEST,
+  SEND_OTP_SUCCESS,
+  SEND_OTP_FAIL,
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
   LOAD_USER_FAIL,
@@ -75,6 +78,25 @@ export const register = (userData) => async (dispatch) => {
     });
   }
 };
+
+//Sending OTP
+export const sendOTP = (otp) => async (dispatch) => {
+  try {
+    dispatch({ type: SEND_OTP_REQUEST });
+
+    const config = { headers: { "Content-Type": "application/json" } };
+
+    const { data } = await axios.post(`/api/v1/sendOtp`, {otp, str: "otp"}, config);
+
+    dispatch({ type: SEND_OTP_SUCCESS, payload: data.success });
+
+  } catch (error) {
+    dispatch({
+      type: SEND_OTP_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+}
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -148,7 +170,7 @@ export const forgotPassword = (email) => async (dispatch) => {
 
     const config = { headers: { "Content-Type": "application/json" } };
 
-    const { data } = await axios.post(`/api/v1/password/forgot`, email, config);
+    const { data } = await axios.post(`/api/v1/password/sendOtp`, {email, str: "forgot"}, config);
 
     dispatch({ type: FORGOT_PASSWORD_SUCCESS, payload: data.message });
   } catch (error) {
