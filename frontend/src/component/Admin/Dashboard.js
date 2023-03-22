@@ -55,7 +55,6 @@ const Dashboard = () => {
       },
     ],
   };
-  // console.log(outOfStock+" "+totalAmount+" "+products.length);
 
   const doughnutState = {
     labels: ["Out of Stock", "InStock"],
