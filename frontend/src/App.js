@@ -101,7 +101,11 @@ function App() {
         <Elements stripe={loadStripe(stripeApiKey)}>
           <Routes>
             <Route path="/process/payment" element={<Payment/>}/>
-            <Route path="/" element={<Home/>} />
+          </Routes>
+        </Elements>
+      )}
+      <Routes>
+      <Route path="/" element={<Home/>} />
             <Route path="/product/:id" element={<ProductDetails/>} />
 
             <Route path="/products" element={<Products/>} />
@@ -157,9 +161,7 @@ function App() {
             <Route path="/admin/users" element={<ProtectedRoute isAdmin={true} Component={UsersList}/>}/>
 
             <Route path="*" element={<NotFound/>} />
-          </Routes>
-        </Elements>
-      )}
+      </Routes>
       <Footer />
     </Router>
   );
