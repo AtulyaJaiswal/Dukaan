@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Sidebar from "./Sidebar.js";
 import "./Dashboard.css";
 import { Typography } from '@mui/material';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Doughnut, Line } from "react-chartjs-2";
 import { Chart as ChartJS, LineElement, ArcElement, CategoryScale, PointElement, LinearScale, Title } from 'chart.js';
 import { useSelector, useDispatch } from "react-redux";
@@ -11,7 +11,7 @@ import { getAllOrders } from "../../actions/orderAction.js";
 import { getAllUsers } from "../../actions/userAction.js";
 import MetaData from "../layout/MetaData";
 
-const Dashboard = () => {
+const Dashboard = (isAdmin) => {
 
   ChartJS.register(ArcElement, CategoryScale, LineElement, PointElement, LinearScale, Title);
 
@@ -23,6 +23,10 @@ const Dashboard = () => {
 
   const { users } = useSelector((state) => state.allUsers);
 
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+
+  const navigate = useNavigate();
+
   let outOfStock = 0;
 
   products &&
@@ -33,10 +37,19 @@ const Dashboard = () => {
     });
 
   useEffect(() => {
+
+    if (isAuthenticated === false) {
+      navigate("/login");
+    }
+
+    if(isAuthenticated===true && isAdmin===true && user.role!=="admin"){
+      navigate("/");
+    }
+
     dispatch(getAdminProduct());
     dispatch(getAllOrders());
     dispatch(getAllUsers());
-  }, [dispatch]);
+  }, [dispatch, navigate, isAuthenticated, isAdmin]);
 
   let totalAmount = 0;
   orders &&

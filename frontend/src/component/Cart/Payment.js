@@ -96,7 +96,7 @@ const Payment = () => {
           };
 
           dispatch(createOrder(order));
-
+          localStorage.removeItem("cartItems");
           navigate("/success");
         } else {
           toast.error("There's some issue while processing payment ");
@@ -108,12 +108,13 @@ const Payment = () => {
     }
   };
 
+
   useEffect(() => {
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
     }
-  }, [dispatch, error, toast]);
+  }, [dispatch, error]);
 
   return (
     <Fragment>

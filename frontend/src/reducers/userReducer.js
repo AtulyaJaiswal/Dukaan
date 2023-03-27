@@ -2,9 +2,18 @@ import {
   LOGIN_REQUEST,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
+  LOGIN_PASSWORD_REQUEST,
+  LOGIN_PASSWORD_SUCCESS,
+  LOGIN_PASSWORD_FAIL,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAIL,
+  REGISTER_USER_PASSWORD_REQUEST,
+  REGISTER_USER_PASSWORD_SUCCESS,
+  REGISTER_USER_PASSWORD_FAIL,
+  SEND_OTP_REQUEST,
+  SEND_OTP_SUCCESS,
+  SEND_OTP_FAIL,
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
   LOAD_USER_FAIL,
@@ -48,6 +57,8 @@ export const userReducer = (state = {user: {} }, action) => {
         case LOGIN_REQUEST:
         case REGISTER_USER_REQUEST:
         case LOAD_USER_REQUEST:
+        case REGISTER_USER_PASSWORD_REQUEST:
+        case LOGIN_PASSWORD_REQUEST:
             return{
                 loading: true,
                 isAuthenticated: false
@@ -55,6 +66,8 @@ export const userReducer = (state = {user: {} }, action) => {
         case LOGIN_SUCCESS:
         case REGISTER_USER_SUCCESS:
         case LOAD_USER_SUCCESS:
+        case REGISTER_USER_PASSWORD_SUCCESS:
+        case LOGIN_PASSWORD_SUCCESS:
             return{
                 ...state,
                 loading: false,
@@ -69,6 +82,8 @@ export const userReducer = (state = {user: {} }, action) => {
           };
         case LOGIN_FAIL:
         case REGISTER_USER_FAIL:
+        case REGISTER_USER_PASSWORD_FAIL:
+        case LOGIN_PASSWORD_FAIL:
             return{
                 ...state,
                 loading: false,
@@ -98,6 +113,36 @@ export const userReducer = (state = {user: {} }, action) => {
         default:
             return state;
     }
+};
+
+export const otpReducer = (state = {user: {} }, action) => {
+
+  switch (action.type) {
+      case SEND_OTP_REQUEST:
+          return{
+              loading: true,
+          };
+      case SEND_OTP_SUCCESS:
+          return{
+              ...state,
+              loading: false,
+              data: action.payload,
+          };
+      case SEND_OTP_FAIL:
+          return{
+              ...state,
+              loading: false,
+              error: action.payload
+          };
+      case CLEAR_ERRORS:
+      return{
+          ...state,
+          error: null,
+      };
+  
+      default:
+          return state;
+  }
 };
 
 export const profileReducer = (state = {}, action) => {

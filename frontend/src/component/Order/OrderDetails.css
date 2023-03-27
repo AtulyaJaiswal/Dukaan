@@ -68,6 +68,20 @@
     font: 100 1vmax "Roboto";
     color: #5e5e5e;
   }
+  .deleteOrderBtn{
+    border: none;
+    background-color: tomato;
+    color: white;
+    font: 300 1vmax "Roboto";
+    width: 10vmax;
+    padding: 0.8vmax;
+    margin: 1vmax 4vmax;
+    cursor: pointer;
+    transition: all 0.5s;
+    border-radius: 4px;
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.219);
+  }
   
   @media screen and (max-width: 600px) {
     .orderDetailsContainer > p {

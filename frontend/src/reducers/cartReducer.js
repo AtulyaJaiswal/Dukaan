@@ -9,14 +9,13 @@ export const cartReducer = ( state = { cartItems: [], shippingInfo: {} }, action
       case ADD_TO_CART:
         const item = action.payload;
   
-        const isItemExist = state.cartItems.find( //pehle se exist krega cart me to bas update krenge isliye check kr rhe
+        const isItemExist = state.cartItems.find(
           (i) => i.product === item.product
         );
   
         if (isItemExist) {
           return {
             ...state,
-            //dhund ke update kr rhe
             cartItems: state.cartItems.map((i) =>
               i.product === isItemExist.product ? item : i
             ),
@@ -24,7 +23,6 @@ export const cartReducer = ( state = { cartItems: [], shippingInfo: {} }, action
         } else {
           return {
             ...state,
-            //nya item add kr rhe agar pehle se exist na ho to
             cartItems: [...state.cartItems, item],
           };
         }

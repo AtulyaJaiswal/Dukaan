@@ -13,7 +13,7 @@
   flex-wrap: wrap;
   padding: 0 5vmax;
   justify-content: center;
-  min-height: 30vh;
+  min-height: 50vh;
 }
 
 .paginationBox {
@@ -102,7 +102,7 @@
   font: 300 1vmax "Roboto";
   width: 80%;
   padding: 0.8vmax;
-  margin: 1vmax 1vmax;
+  margin: 1vmax 0vmax 1vmax 1vmax;
   cursor: pointer;
   transition: all 0.5s;
   border-radius: 4px;

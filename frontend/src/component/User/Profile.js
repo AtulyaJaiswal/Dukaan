@@ -11,13 +11,11 @@ const Profile = () => {
 
   const { user, loading, isAuthenticated } = useSelector((state) => state.user);
 
-  console.log(user.avatar.url);
-
   useEffect(() => {
-    if (isAuthenticated === false) {
+    if (isAuthenticated === false || user===null) {
       navigate("/login");
     }
-  }, [navigate, isAuthenticated]);
+  }, [navigate, isAuthenticated, user]);
   return (
     <Fragment>
       {loading ? (
@@ -29,7 +27,7 @@ const Profile = () => {
             <div>
                 <h1>My Profile</h1>
                 <img 
-                  src={user.avatar.url}
+                  src={user.avatar.url} 
                   // src=""
                   alt={user.name} />
                 <Link to="/me/update">Edit Profile</Link>
@@ -49,7 +47,11 @@ const Profile = () => {
                 </div> */}
                 <div>
                     <Link to="/orders">My Orders</Link>
-                    {/* <Link to="/password/update">Change Password</Link> */}
+                    {user.passwordPresent==="true" ? (
+                      <Link to="/password/update">Change Password</Link>
+                    ):(
+                      <div></div>
+                    )}
                 </div>
             </div>
           </div>

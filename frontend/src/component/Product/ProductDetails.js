@@ -99,7 +99,7 @@ const ProductDetails = () => {
           <MetaData title={`${product.name} -- ECOMMERCE`} />
           <div className="ProductDetails">
             <div className='carousel_image_set'>
-              <Carousel className='carousel'>
+              <Carousel className='carousel' stopAutoPlayOnHover="true" cycleNavigation="true">
                 {product.images &&
                   product.images.map((item, i) => (
                     <img

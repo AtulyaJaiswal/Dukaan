@@ -203,6 +203,17 @@
   }
   
   @media screen and (max-width: 600px) {
+    .CarouselImage {
+      display: flex;
+      height: 50vmax;
+      width: max-content;
+      padding: 0;
+    }
+
+    .carousel_image_set{
+      padding: 0;
+    }
+
     .ProductDetails {
       flex-direction: column;
       height: unset;

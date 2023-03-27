@@ -1,6 +1,7 @@
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
 const firebaseConfig = {
      apiKey: "AIzaSyDfx6JC9eVQks4vWoEA5It730BW2thEBps",
@@ -13,10 +14,24 @@ const firebaseConfig = {
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
-const provider=new firebase.auth.GoogleAuthProvider();
 
 const db=firebaseApp.firestore();
 
-export { auth, provider };
+const authPhone = getAuth();
+function verifyPhone(number){
+    const recaptchaVerifier = new RecaptchaVerifier('sign-in-phone-number', {
+        'size': 'invisible',
+        'callback': (response) => {
+          // console.log(response);
+        }
+    }, authPhone);
+    return signInWithPhoneNumber(authPhone, number, recaptchaVerifier);
+}
+
+// AUTHENTICATION FOR LOGIN
+const auth=firebase.auth();
+const provider=new firebase.auth.GoogleAuthProvider();
+
+
+export { auth, verifyPhone, provider };
 export default db;

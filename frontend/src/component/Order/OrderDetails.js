@@ -2,19 +2,26 @@ import React, { Fragment, useEffect } from "react";
 import "./OrderDetails.css";
 import { useSelector, useDispatch } from "react-redux";
 import MetaData from "../layout/MetaData";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
-import { getOrderDetails, clearErrors } from "../../actions/orderAction";
+import { getOrderDetails, clearErrors, deleteOrder } from "../../actions/orderAction";
 import Loader from "../layout/Loader/Loader";
 import { toast } from "react-toastify";
 import { useParams } from 'react-router-dom';
 
 const OrderDetails = () => {
   const { order, error, loading } = useSelector((state) => state.orderDetails);
-  console.log(order);
+  const { isAuthenticated } = useSelector((state) => state.user);
 
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const deleteOrderWithId = () => {
+    dispatch(deleteOrder(id));
+    toast.success("Order is cancelled")
+    navigate("/orders")
+  };
 
   useEffect(() => {
     if (error) {
@@ -22,8 +29,12 @@ const OrderDetails = () => {
       dispatch(clearErrors());
     }
 
+    if (isAuthenticated === false) {
+      navigate("/login");
+    }
+
     dispatch(getOrderDetails(id));
-  }, [dispatch, toast, error, id]);
+  }, [dispatch, error, id, navigate, isAuthenticated]);
   return (
     <Fragment>
       {loading ? (
@@ -95,6 +106,7 @@ const OrderDetails = () => {
                 </div>
               </div>
             </div>
+            <button onClick={deleteOrderWithId} className="deleteOrderBtn">Cancel Order</button>
 
             <div className="orderDetailsCartItems">
               <Typography>Order Items:</Typography>

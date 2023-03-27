@@ -6,6 +6,7 @@ import { addItemsToCart, removeItemsFromCart } from "../../actions/cartAction";
 import { Typography } from '@mui/material';
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import { Link, useNavigate } from "react-router-dom";
+import MetaData from "../layout/MetaData";
 
 //Stock dekhna pdega
 
@@ -35,12 +36,14 @@ const Cart = () => {
     dispatch(removeItemsFromCart(id));
   };
 
-  const checkoutHandler = () => {
-    navigate("/login?redirect=/shipping");
+  const checkoutHandler = (e) => {
+    e.preventDefault();
+    navigate("/shipping");
   };
 
   return (
     <Fragment>
+      <MetaData title="Cart" />
       {cartItems.length === 0 ? (
         <div className="emptyCart">
           <RemoveShoppingCartIcon />

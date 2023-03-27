@@ -93,7 +93,7 @@ const Home = () => {
         <Loader />
       ) : (
         <Fragment>
-          <MetaData title="E-COMMERCE" />
+          <MetaData title="Dukaan" />
 
           {/* <div className="banner">
             <p>Welcome to E-Commerce</p>

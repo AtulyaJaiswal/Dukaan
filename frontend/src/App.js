@@ -52,7 +52,7 @@ function App() {
 
   async function getStripeApiKey() {
     const { data } = await axios.get("/api/v1/stripeApiKey");
-    console.log(data);
+    // console.log(data);
     setStripeApiKey(data.stripeApiKey);
   }
   const openCloseMenu = () => {
@@ -65,11 +65,16 @@ function App() {
         families: ["Roboto", "Droid Sans", "Chilanka"],
       },
     });
-
+    
     store.dispatch(loadUser());
 
     getStripeApiKey();
+
   }, []);
+
+  // useEffect(() => {
+  //   console.log(window.location.pathname);
+  // }, [window.location]);
 
   return (
     <Router>
@@ -95,73 +100,66 @@ function App() {
       {stripeApiKey && (
         <Elements stripe={loadStripe(stripeApiKey)}>
           <Routes>
-            <Route path="/process/payment" element={<ProtectedRoute Component={Payment}/>}/>
+            <Route path="/process/payment" element={<Payment/>}/>
+            <Route path="/" element={<Home/>} />
+            <Route path="/product/:id" element={<ProductDetails/>} />
+
+            <Route path="/products" element={<Products/>} />
+
+            <Route path="/products/:keyword" element={<Products/>} />
+
+            <Route path="/search" element={<Search/>} />
+
+            <Route path="/contact" element={<Contact/>} />
+
+            <Route path="/about" element={<About/>} />
+
+            <Route path="/account" element={<ProtectedRoute Component={Profile}/>}/>
+
+            <Route path="/me/update" element={<ProtectedRoute Component={UpdateProfile}/>}/>
+
+            <Route path="/password/update" element={<ProtectedRoute Component={UpdatePassword}/>}/>
+
+            <Route path="/password/forgot" element={<ForgotPassword/>} />
+
+            <Route path="/password/reset/:token" element={<ResetPassword/>} />
+
+            <Route path="/login" element={<LoginSignUp/>} />
+
+            <Route path="/cart" element={<Cart/>} />
+
+            <Route path="/shipping" element={<ProtectedRoute Component={Shipping}/>}/>
+
+            <Route path="/order/:id" element={<ProtectedRoute Component={OrderDetails}/>}/>
+
+            <Route path="/order/confirm" element={<ProtectedRoute Component={ConfirmOrder}/>}/>
+
+            <Route path="/orders" element={<ProtectedRoute Component={MyOrders}/>}/>
+
+            <Route path="/success" element={<ProtectedRoute Component={OrderSuccess}/>}/>
+
+            <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true} Component={Dashboard}/>}/>
+
+            <Route path="/admin/order/:id" element={<ProtectedRoute isAdmin={true} Component={ProcessOrder}/>}/>
+
+            <Route path="/admin/orders" element={<ProtectedRoute isAdmin={true} Component={OrderList}/>}/>
+
+            <Route path="/admin/product/:id" element={<ProtectedRoute isAdmin={true} Component={UpdateProduct}/>}/>
+
+            <Route path="/admin/product" element={<ProtectedRoute isAdmin={true} Component={NewProduct}/>}/>
+
+            <Route path="/admin/products" element={<ProtectedRoute isAdmin={true} Component={ProductList}/>}/>
+
+            <Route path="/admin/reviews" element={<ProtectedRoute isAdmin={true} Component={ProductReviews}/>}/>
+
+            <Route path="/admin/user/:id" element={<ProtectedRoute isAdmin={true} Component={UpdateUser}/>}/>
+
+            <Route path="/admin/users" element={<ProtectedRoute isAdmin={true} Component={UsersList}/>}/>
+
+            <Route path="*" element={<NotFound/>} />
           </Routes>
         </Elements>
       )}
-      <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/product/:id" element={<ProductDetails/>} />
-
-        <Route path="/products" element={<Products/>} />
-
-        <Route path="/products/:keyword" element={<Products/>} />
-
-        <Route path="/search" element={<Search/>} />
-
-        <Route path="/contact" element={<Contact/>} />
-
-        <Route path="/about" element={<About/>} />
-
-        <Route path="/account" element={<ProtectedRoute Component={Profile}/>}/>
-
-        <Route path="/me/update" element={<ProtectedRoute Component={UpdateProfile}/>}/>
-
-        <Route path="/password/update" element={<ProtectedRoute Component={UpdatePassword}/>}/>
-
-        <Route path="/password/forgot" element={<ForgotPassword/>} />
-
-        <Route path="/password/reset/:token" element={<ResetPassword/>} />
-
-        <Route path="/login" element={<LoginSignUp/>} />
-
-        <Route path="/cart" element={<Cart/>} />
-
-        <Route path="/shipping" element={<ProtectedRoute Component={Shipping}/>}/>
-
-        <Route path="/order/:id" element={<ProtectedRoute Component={OrderDetails}/>}/>
-
-        <Route path="/order/confirm" element={<ProtectedRoute Component={ConfirmOrder}/>}/>
-
-        <Route path="/orders" element={<ProtectedRoute Component={MyOrders}/>}/>
-
-        <Route path="/success" element={<ProtectedRoute Component={OrderSuccess}/>}/>
-
-        <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true} Component={Dashboard}/>}/>
-
-        <Route path="/admin/order/:id" element={<ProtectedRoute isAdmin={true} Component={ProcessOrder}/>}/>
-
-        <Route path="/admin/orders" element={<ProtectedRoute isAdmin={true} Component={OrderList}/>}/>
-
-        <Route path="/admin/product/:id" element={<ProtectedRoute isAdmin={true} Component={UpdateProduct}/>}/>
-
-        <Route path="/admin/product" element={<ProtectedRoute isAdmin={true} Component={NewProduct}/>}/>
-
-        <Route path="/admin/products" element={<ProtectedRoute isAdmin={true} Component={ProductList}/>}/>
-
-        <Route path="/admin/reviews" element={<ProtectedRoute isAdmin={true} Component={ProductReviews}/>}/>
-
-        <Route path="/admin/user/:id" element={<ProtectedRoute isAdmin={true} Component={UpdateUser}/>}/>
-
-        <Route path="/admin/users" element={<ProtectedRoute isAdmin={true} Component={UsersList}/>}/>
-
-        <Route path="*"
-          element={
-            window.location.pathname === "/process/payment" ? null : <NotFound/>
-          }
-        />
-      </Routes>
-
       <Footer />
     </Router>
   );

@@ -2,9 +2,15 @@ import {
   LOGIN_REQUEST,
   LOGIN_FAIL,
   LOGIN_SUCCESS,
+  LOGIN_PASSWORD_REQUEST,
+  LOGIN_PASSWORD_SUCCESS,
+  LOGIN_PASSWORD_FAIL,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
   REGISTER_USER_FAIL,
+  REGISTER_USER_PASSWORD_REQUEST,
+  REGISTER_USER_PASSWORD_SUCCESS,
+  REGISTER_USER_PASSWORD_FAIL,
   SEND_OTP_REQUEST,
   SEND_OTP_SUCCESS,
   SEND_OTP_FAIL,
@@ -60,6 +66,25 @@ export const login = (email) => async (dispatch) => {
   }
 };
 
+// Login using Password
+export const loginUsingPassword = (email,password) => async (dispatch) => {
+  try {
+    dispatch({ type: LOGIN_PASSWORD_REQUEST });
+
+    const config = { headers: { "Content-Type": "application/json" } };
+
+    const { data } = await axios.post(
+      `/api/v1/loginUsingPassword`,
+      { email, password},
+      config
+    );
+    
+    dispatch({ type: LOGIN_PASSWORD_SUCCESS, payload: data.user });
+  } catch (error) {
+    dispatch({ type: LOGIN_PASSWORD_FAIL, payload: error.response.data.message });
+  }
+};
+
 // Register
 export const register = (userData) => async (dispatch) => {
   try {
@@ -79,16 +104,36 @@ export const register = (userData) => async (dispatch) => {
   }
 };
 
+//Register using password
+export const registerUsingPassword = (email,password,avatar,name) => async (dispatch) => {
+  try {
+    dispatch({ type: REGISTER_USER_PASSWORD_REQUEST });
+
+    const config = { headers: { "Content-Type": "application/json" } };
+    console.log(name,email,password);
+
+    const { data } = await axios.post(`/api/v1/registerUsingPassword`, {email,password,avatar,name}, config);
+
+    dispatch({ type: REGISTER_USER_PASSWORD_SUCCESS, payload: data.user });
+
+  } catch (error) {
+    dispatch({
+      type: REGISTER_USER_PASSWORD_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
 //Sending OTP
-export const sendOTP = (otp) => async (dispatch) => {
+export const sendOTP = (email) => async (dispatch) => {
   try {
     dispatch({ type: SEND_OTP_REQUEST });
 
     const config = { headers: { "Content-Type": "application/json" } };
 
-    const { data } = await axios.post(`/api/v1/sendOtp`, {otp, str: "otp"}, config);
+    const { data } = await axios.post(`/api/v1/sendOtp`, {email, str: "otp"}, config);
 
-    dispatch({ type: SEND_OTP_SUCCESS, payload: data.success });
+    dispatch({ type: SEND_OTP_SUCCESS, payload: data });
 
   } catch (error) {
     dispatch({
@@ -102,7 +147,7 @@ export const sendOTP = (otp) => async (dispatch) => {
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: LOAD_USER_REQUEST });
-
+    
     const { data } = await axios.get(`/api/v1/me`);
 
     dispatch({ type: LOAD_USER_SUCCESS, payload: data.user });
@@ -166,23 +211,23 @@ export const updatePassword = (passwords) => async (dispatch) => {
 // Forgot Password
 export const forgotPassword = (email) => async (dispatch) => {
   try {
-    dispatch({ type: FORGOT_PASSWORD_REQUEST });
+    dispatch({ type: SEND_OTP_REQUEST });
 
     const config = { headers: { "Content-Type": "application/json" } };
 
-    const { data } = await axios.post(`/api/v1/password/sendOtp`, {email, str: "forgot"}, config);
+    const { data } = await axios.post(`/api/v1/sendOtp`, {email, str: "forgot"}, config);
 
-    dispatch({ type: FORGOT_PASSWORD_SUCCESS, payload: data.message });
+    dispatch({ type: SEND_OTP_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
-      type: FORGOT_PASSWORD_FAIL,
+      type: SEND_OTP_FAIL,
       payload: error.response.data.message,
     });
   }
 };
 
 // Reset Password
-export const resetPassword = (token, passwords) => async (dispatch) => {
+export const resetPassword = (token, password, confirmPassword, userEmail) => async (dispatch) => {
   try {
     dispatch({ type: RESET_PASSWORD_REQUEST });
 
@@ -190,7 +235,7 @@ export const resetPassword = (token, passwords) => async (dispatch) => {
 
     const { data } = await axios.put(
       `/api/v1/password/reset/${token}`,
-      passwords,
+      {password, confirmPassword, userEmail},
       config
     );
 
@@ -208,6 +253,8 @@ export const getAllUsers = () => async (dispatch) => {
   try {
     dispatch({ type: ALL_USERS_REQUEST });
     const { data } = await axios.get(`/api/v1/admin/users`);
+
+    console.log(data.users);
 
     dispatch({ type: ALL_USERS_SUCCESS, payload: data.users });
   } catch (error) {

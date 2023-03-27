@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import CheckoutSteps from "../Cart/CheckoutSteps";
 import { useSelector } from "react-redux";
 import MetaData from "../layout/MetaData";
@@ -12,7 +12,7 @@ const ConfirmOrder = () => {
   const navigate = useNavigate();
 
   const { shippingInfo, cartItems } = useSelector((state) => state.cart);
-  const { user } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.quantity * item.price,
@@ -35,12 +35,16 @@ const ConfirmOrder = () => {
       totalPrice,
     };
 
-    // same as local storage
-    //tab close krte hi chale jaata, jis tab me save hua bas usi me rhta
     sessionStorage.setItem("orderInfo", JSON.stringify(data));
 
     navigate("/process/payment");
   };
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      navigate("/login");
+    }
+  }, [navigate, isAuthenticated]);
 
   return (
     <Fragment>

@@ -4,7 +4,7 @@ import "./MyOrders.css";
 import { useSelector, useDispatch } from "react-redux";
 import { clearErrors, myOrders } from "../../actions/orderAction";
 import Loader from "../layout/Loader/Loader";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Typography from "@mui/material/Typography";
 import MetaData from "../layout/MetaData";
@@ -12,9 +12,10 @@ import LaunchIcon from "@mui/icons-material/Launch";
 
 const MyOrders = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { loading, error, orders } = useSelector((state) => state.myOrders);
-  const { user } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 300, flex: 1 },
@@ -80,8 +81,12 @@ const MyOrders = () => {
       dispatch(clearErrors());
     }
 
+    if (isAuthenticated === false) {
+      navigate("/login");
+    }
+
     dispatch(myOrders());
-  }, [dispatch, toast, error]);
+  }, [dispatch, navigate, isAuthenticated, error]);
 
   return (
     <Fragment>

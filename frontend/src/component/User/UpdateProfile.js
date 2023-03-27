@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import "./UpdateProfile.css";
 import Loader from "../layout/Loader/Loader";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
+// import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import FaceIcon from "@mui/icons-material/Face";
 import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, updateProfile, loadUser } from "../../actions/userAction";
@@ -16,22 +16,15 @@ const UpdateProfile = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const { error, isUpdated, loading } = useSelector((state) => state.profile);
 
-  const [name, setName] = useState("");
-  // const [email, setEmail] = useState("");
+  const [name, setName] = useState(""); 
   const [avatar, setAvatar] = useState();
   const [avatarPreview, setAvatarPreview] = useState(Profile);
 
   const updateProfileSubmit = (e) => {
     e.preventDefault();
-
-    // const myForm = new FormData();
-
-    // myForm.set("name", name);
-    // // myForm.set("email", email);
-    // myForm.set("avatar", avatar);
     dispatch(updateProfile(name,avatar));
   };
 
@@ -50,10 +43,13 @@ const UpdateProfile = () => {
   console.log(avatar);
 
   useEffect(() => {
+
+    if (isAuthenticated === false) {
+      navigate("/login");
+    }
+
     if (user) {
       setName(user.name);
-      // setEmail(user.email);
-      // setAvatarPreview(user.avatar.url);
     }
 
     if (error) {
@@ -71,7 +67,7 @@ const UpdateProfile = () => {
         type: UPDATE_PROFILE_RESET,
       });
     }
-  }, [dispatch, error, toast, navigate, user, isUpdated]);
+  }, [dispatch, error, user, isUpdated, navigate, isAuthenticated]);
 
 
   return (

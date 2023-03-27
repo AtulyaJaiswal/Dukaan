@@ -17,6 +17,7 @@ const UpdatePassword = () => {
   const dispatch = useDispatch();
 
   const { error, isUpdated, loading } = useSelector((state) => state.profile);
+  const { isAuthenticated } = useSelector((state) => state.user);
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -35,6 +36,10 @@ const UpdatePassword = () => {
   };
 
   useEffect(() => {
+    if (isAuthenticated === false) {
+      navigate("/login");
+    }
+
     if (error) {
       toast.error(error);
       dispatch(clearErrors());
@@ -49,7 +54,7 @@ const UpdatePassword = () => {
         type: UPDATE_PASSWORD_RESET,
       });
     }
-  }, [dispatch, error, toast, navigate, isUpdated]);
+  }, [dispatch, error, isAuthenticated, navigate, isUpdated]);
 
   return (
     <Fragment>

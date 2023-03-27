@@ -36,8 +36,8 @@ const Products = () => {
     products,
     loading,
     error,
-    productsCount,
-    resultPerPage,
+    // productsCount,
+    // resultPerPage,
     pages: totalPages,
   } = useSelector((state) => state.products);
 
@@ -62,6 +62,9 @@ const Products = () => {
   const filterElements = () => {
     dispatch(getProduct(keyword, page, price, category, ratings));
   }
+  const removeFilterElements = () => {
+    dispatch(getProduct());
+  }
   // let count = pages;
 
   useEffect(() => {
@@ -72,8 +75,8 @@ const Products = () => {
 
     // setPages(totalPages);
 
-    dispatch(getProduct());
-  }, [dispatch, error]);
+    dispatch(getProduct(keyword, page, price, category, ratings));
+  }, [dispatch, error, page]);
 
   return (
     <Fragment>
@@ -81,7 +84,7 @@ const Products = () => {
         <Loader />
       ) : (
         <Fragment>
-          <MetaData title="PRODUCTS -- ECOMMERCE" />
+          <MetaData title="PRODUCTS" />
           <h2 className="productsHeading">Products</h2>
 
           <div className="products">
@@ -130,6 +133,9 @@ const Products = () => {
             </fieldset>
             <div>
               <button onClick={filterElements}>Filter</button>
+            </div>
+            <div>
+              <button onClick={removeFilterElements}>Remove Filter</button>
             </div>
           </div>
           {/* {resultPerPage < count && ( */}

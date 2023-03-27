@@ -13,8 +13,9 @@ exports.registerUser = catchAsyncErrors(async(req,res,next) => {
     const { name,email,avatar} = req.body; 
     
     const userExist = await User.findOne({ email }); 
+    const userPasswordExist = await UserPassword.findOne({ email }); 
 
-    if(userExist){
+    if(userExist || userPasswordExist){
         return next(new ErrorHandler("User already registered, try logging in",401));
     }
 
@@ -29,27 +30,36 @@ exports.registerUser = catchAsyncErrors(async(req,res,next) => {
     sendToken(user,201,res);
 });
 
-//REGISTER USER-PASSWORD
-exports.registerUserPassword = catchAsyncErrors(async(req,res,next) => {
+//REGISTER USER USING PASSWORD
+exports.registerUserUsingPassword = catchAsyncErrors(async(req,res,next) => {
 
-    const { name,email,avatar} = req.body; 
-    
+    const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 300,
+        crop: "scale"
+    });
+    console.log(myCloud);
+
+    const { name,email,password} = req.body;
+
+    const userPasswordExist = await UserPassword.findOne({ email }); 
     const userExist = await User.findOne({ email }); 
 
-    if(userExist){
+    if(userExist || userPasswordExist){
         return next(new ErrorHandler("User already registered, try logging in",401));
     }
 
-    const user = await User.create({
-        name,email,
+    const user = await UserPassword.create({
+        name,email,password,
         avatar:{
-            public_id: avatar,
-            url: avatar,
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
         }
     });
 
     sendToken(user,201,res);
 });
+
 
 //LOGIN USER
 exports.loginUser = catchAsyncErrors(async(req,res,next)=>{
@@ -57,10 +67,38 @@ exports.loginUser = catchAsyncErrors(async(req,res,next)=>{
 
     const user = await User.findOne({ email }); 
 
+    const userPassword = await UserPassword.findOne({ email }); 
+    if(userPassword){
+        return next(new ErrorHandler("Login using email and password", 401));
+    }
+
     if(!user){
         return next(new ErrorHandler("Not Registered",401));
     }
     
+    sendToken(user,200,res);
+
+});
+
+//LOGIN USER USING PASSWORD
+exports.loginUsingPassword = catchAsyncErrors(async(req,res,next)=>{
+
+    const {email,password} = req.body;
+
+    if(!email || !password){
+        return next(new ErrorHandler("Please enter email and password both", 400));
+    }
+
+    const user = await UserPassword.findOne({ email }).select("+password");
+    if(!user){
+        return next(new ErrorHandler("Invalid email or password",401));
+    }
+
+    const isPasswordMatched = await user.comparePassword(password);
+    if(!isPasswordMatched){
+        return next(new ErrorHandler("Invalid email or password",401));
+    }
+
     sendToken(user,200,res);
 
 });
@@ -83,44 +121,47 @@ exports.logout = catchAsyncErrors(async (req,res,next) =>{
 exports.sendOtp = catchAsyncErrors(async (req,res,next) => {
 
     let message = "";
+    let otp = Math.floor(100000 + Math.random() * 900000);
 
     if(req.body.str==="forgot"){
-        const user = await User.findOne({email: req.body.email});
+        const user = await UserPassword.findOne({email: req.body.email});
 
         if(!user){
             return next(new ErrorHandler("User not found", 404));
         }
 
-        //GET ResetPasswordToken
-        const resetToken = user.getResetPasswordToken();
-
-        await user.save({validateBeforeSave: false});
-
-        const resetPasswordUrl = `${req.protocol}://${req.get("host")}/password/reset/${resetToken}`;    
         
         //MESSAGE TO BE SENT ON EMAIL
-        message = `Your Password reset token is :- \n
-        \n ${resetPasswordUrl} \n
+        message = `Your Password reset OTP is :- ${otp}
         \n If you have not requested this email, please ignore it`;
     }
 
-    if(req.body.str==="otp"){   
+    else if(req.body.str==="otp"){  
+
+        const {email} = req.body;
+        
+        const userPasswordExist = await UserPassword.findOne({ email }); 
+        const userExist = await User.findOne({ email }); 
+
+        if(userExist || userPasswordExist){
+            return next(new ErrorHandler("User already registered, try logging in",401));
+        }
         
         //MESSAGE TO BE SENT ON EMAIL
         message = `Your OTP for registration is :- ${otp}
         \n If you have not requested this email, please ignore it`;
     }
-   
    try {
 
         await sendEmail({
-            email: user.email,
-            subject: `Password recovery`,
+            email: req.body.email,
+            subject: `OTP for verification`,
             message,
         });
         res.status(200).json({
             success:true,
-            message: `Email sent successfully`
+            message: `Email sent successfully`,
+            otp,
         });
     
    } catch (error) {
@@ -131,20 +172,13 @@ exports.sendOtp = catchAsyncErrors(async (req,res,next) => {
 
 //RESET PASSWORD
 exports.resetPassword = catchAsyncErrors(async(req,res,next) => {
+    
+    const email = req.body.userEmail;
 
-    //create token hash to match token in database
-    const resetPasswordToken = crypto
-        .createHash("sha256")
-        .update(req.params.token)
-        .digest("hex");
-
-    const user = await User.findOne({
-        resetPasswordToken,
-        resetPasswordExpire: {$gt: Date.now()},
-    });
+    const user = await UserPassword.findOne({email}).select("+password");
 
     if(!user){
-        return next(new ErrorHandler("Reset password token is invalid or expired", 400));
+        return next(new ErrorHandler("Please Try Again", 400));
     }
     
     if(req.body.password !== req.body.confirmPassword){
@@ -152,18 +186,25 @@ exports.resetPassword = catchAsyncErrors(async(req,res,next) => {
     }
 
     user.password = req.body.password;
-    user.resetPasswordToken=d=undefined;
-    user.resetPasswordExpire=undefined;
 
     await user.save();
 
-    sendToken(user, 200, res);
+    res.status(200).json({
+        success:true,
+        message: "Password Updated Successfully",
+    });
 });
 
 //GET USER DETAILS
 exports.getUserDetails = catchAsyncErrors(async (req,res,next) => {
 
-    const user = await User.findById(req.user.id);
+    let user = await User.findById(req.user.id);
+    // console.log(user);
+    if(!user){
+        user = await UserPassword.findById(req.user.id);
+    }
+
+    // console.log(user);
 
     res.status(200).json({
         success:true,
@@ -174,7 +215,7 @@ exports.getUserDetails = catchAsyncErrors(async (req,res,next) => {
 //UPDATE USER PASSWORD
 exports.updatePassword = catchAsyncErrors(async(req,res,next) => {
 
-    const user = await User.findById(req.user.id).select("+password");
+    const user = await UserPassword.findById(req.user.id).select("+password");
 
     const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
     if(!isPasswordMatched){
@@ -240,18 +281,23 @@ exports.updateProfile = catchAsyncErrors(async(req,res,next) => {
 //GET ALL USERS (ADMIN)
 exports.getAllUsers = catchAsyncErrors(async(req,res,next) => {
 
-    const users = await User.find();
+    const  users1 = await User.find();
+    const users2 = await UserPassword.find();
 
     res.status(200).json({
         success:true,
-        users,
+        users: [...users1, ...users2],
     });
 });
 
 //GET SINGLE USER (ADMIN)
 exports.getSingleUser = catchAsyncErrors(async(req,res,next) => {
 
-    const user = await User.findById(req.params.id);
+    let user = await User.findById(req.params.id);
+
+    if(!user){
+        user = await UserPassword.findById(req.params.id);
+    }
 
     if(!user){
         return next(new ErrorHandler(`User does not exist with Id: ${req.params.id}`));
@@ -277,6 +323,13 @@ exports.updateUserRole = catchAsyncErrors(async(req,res,next) => {
         runValidators:true,
         useFindAndModify: false,
     });
+    if(!user){
+        await UserPassword.findByIdAndUpdate(req.params.id, newUserData, {
+            new:true,
+            runValidators:true,
+            useFindAndModify: false,
+        });
+    }
 
     res.status(200).json({
         success: true,
@@ -286,7 +339,11 @@ exports.updateUserRole = catchAsyncErrors(async(req,res,next) => {
 //DELETE USER --ADMIN
 exports.deleteUser = catchAsyncErrors(async(req,res,next) => {
 
-    const user = await User.findById(req.params.id);
+    let user = await User.findById(req.params.id);
+
+    if(!user){
+        user = await UserPassword.findById(req.params.id);
+    }
 
     if(!user){
         return next(new ErrorHandler(`User does not exist with Id: ${req.params.id}`));

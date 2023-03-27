@@ -7,22 +7,24 @@ import { toast } from "react-toastify";
 import MetaData from "../layout/MetaData";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockIcon from "@mui/icons-material/Lock";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 const ResetPassword = () => {
 
   const { token } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { state } = useLocation();
 
-  const { error, success, loading } = useSelector(
-    (state) => state.forgotPassword
-  );
+  const { error, success, loading } = useSelector((state) => state.forgotPassword);
+  // const { error: otpError, loading: otpLoading, data } = useSelector( (state) => state.otpSender);
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { userEmail } = state;
 
   const resetPasswordSubmit = (e) => {
+
     e.preventDefault();
 
     const myForm = new FormData();
@@ -30,7 +32,7 @@ const ResetPassword = () => {
     myForm.set("password", password);
     myForm.set("confirmPassword", confirmPassword);
 
-    dispatch(resetPassword(token, myForm));
+    dispatch(resetPassword(token, password, confirmPassword, userEmail));
   };
 
   useEffect(() => {
@@ -44,7 +46,7 @@ const ResetPassword = () => {
 
       navigate("/login");
     }
-  }, [dispatch, error, toast, navigate, success]);
+  }, [dispatch, error, navigate, success]);
 
   return (
     <Fragment>
