@@ -105,7 +105,7 @@ function App() {
         </Elements>
       )}
       <Routes>
-      <Route path="/" element={<Home/>} />
+            <Route path="/" element={<Home/>} />
             <Route path="/product/:id" element={<ProductDetails/>} />
 
             <Route path="/products" element={<Products/>} />
@@ -160,7 +160,10 @@ function App() {
 
             <Route path="/admin/users" element={<ProtectedRoute isAdmin={true} Component={UsersList}/>}/>
 
-            <Route path="*" element={<NotFound/>} />
+            <Route path="*" element={
+                window.location.pathname === "/process/payment" ? null : <NotFound/>
+              }
+          />
       </Routes>
       <Footer />
     </Router>
@@ -171,3 +174,4 @@ export default App;
 
 // Notes
 // 2. Different Loader
+//  page numbering after filtering categories

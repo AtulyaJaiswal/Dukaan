@@ -65,7 +65,6 @@ const Products = () => {
   const removeFilterElements = () => {
     dispatch(getProduct());
   }
-  // let count = pages;
 
   useEffect(() => {
     if (error) {
@@ -73,10 +72,12 @@ const Products = () => {
       dispatch(clearErrors());
     }
 
-    // setPages(totalPages);
-
     dispatch(getProduct(keyword, page, price, category, ratings));
   }, [dispatch, error, page]);
+
+  useEffect(() => {
+    setPages(totalPages);
+  }, [totalPages]);
 
   return (
     <Fragment>

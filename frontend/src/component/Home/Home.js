@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import "./Home.css";
 import Carousel from 'react-material-ui-carousel';
 import ProductCard from "./ProductCard.js";
@@ -7,8 +7,6 @@ import { getProduct } from "../../actions/productAction";
 import { useSelector, useDispatch } from "react-redux";
 import Loader from "../layout/Loader/Loader";
 import {toast} from "react-toastify";
-import { useParams } from "react-router-dom";
-import Pagination from "../Pagination/Pagination";
 import BG1 from "../../Images/Background1.jpg";
 import BG2 from "../../Images/Background2.jpg";
 import BG3 from "../../Images/Background3.jpg";
@@ -19,28 +17,8 @@ import BG7 from "../../Images/Background7.jpg";
 import BG8 from "../../Images/Background8.jpg";
 
 const Home = () => {
-
-  const { keyW, page:pageNum } = useParams();
   const dispatch = useDispatch();
-  //USE SELECTOR IS USED TO FETCH DATA FROM STORE
-  // const { loading, error, products } = useSelector((state) => state.products);
-  const {
-    products,
-    loading,
-    error,
-    productsCount,
-    resultPerPage,
-    pages: totalPages,
-  } = useSelector((state) => state.products);
-
-  const pageNumber = pageNum || 1;
-  const [page, setPage] = useState(pageNumber);
-  const [pages, setPages] = useState(totalPages);
-  const [price, setPrice] = useState([0, 25000]);
-  const [category, setCategory] = useState("");
-  const [ratings, setRatings] = useState(0);
-
-  const keyword = keyW;
+  const { products, loading, error, } = useSelector((state) => state.products);
 
   var items = [
     {
@@ -83,8 +61,8 @@ const Home = () => {
       // dispatch(clearErrors());
     }
 
-    dispatch(getProduct(keyword, page, price, category, ratings));
-  }, [dispatch, keyword, page, price, category, ratings, error]);
+    dispatch(getProduct());
+  }, [dispatch, error]);
     
 
   return (
@@ -94,17 +72,6 @@ const Home = () => {
       ) : (
         <Fragment>
           <MetaData title="Dukaan" />
-
-          {/* <div className="banner">
-            <p>Welcome to E-Commerce</p>
-            <h1>FIND AMAZING PRODUCTS BELOW</h1> */}
-
-            {/* <a href="#container">
-              <button>
-                Scroll <MouseIcon/>
-              </button>
-            </a> */}
-          {/* </div> */}
           <Carousel className='carousel'>
               {items.map( (item, i) => (
                 <img
@@ -124,13 +91,6 @@ const Home = () => {
                 products.map((product) => (
                   <ProductCard key={product._id} product={product} />
                 ))}   
-            </div>
-            <div className="paginationBox">
-                <Pagination 
-                  page={page} 
-                  pages={pages} 
-                  changePage={setPage} 
-                />
             </div>
           </div>
           <div className="margin"></div>

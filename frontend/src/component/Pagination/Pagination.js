@@ -2,6 +2,7 @@ import "./Pagination.css";
 
 const Pagination = ({ page, pages, changePage }) => {
   let middlePagination;
+  console.log(pages);
 
   if (pages <= 5) {
     middlePagination = [...Array(pages)].map((_, idx) => (
@@ -54,8 +55,9 @@ const Pagination = ({ page, pages, changePage }) => {
             <button onClick={() => changePage(pages)}>{pages}</button>
           </>
         );
-      } else {
+      } else if(pages!==undefined) {
         let amountLeft = pages - page + 5;
+        console.log(amountLeft);
         middlePagination = (
           <>
             <button onClick={() => changePage(1)}>1</button>
