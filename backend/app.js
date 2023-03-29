@@ -37,7 +37,7 @@ app.use("/api/v1", payment);
 
 // USE ON DEPLOYMENT
 app.use(express.static(path.join(__dirname, "../frontend/build/index.html")));
-app.get("*", (req,res) => {
+app.get("/*", (req,res) => {
     res.sendFile(path.resolve(__dirname, "../frontend/build"))
 });
 
