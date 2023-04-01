@@ -33,12 +33,6 @@ exports.registerUser = catchAsyncErrors(async(req,res,next) => {
 //REGISTER USER USING PASSWORD
 exports.registerUserUsingPassword = catchAsyncErrors(async(req,res,next) => {
 
-    const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
-        folder: "avatars",
-        width: 300,
-        crop: "scale"
-    });
-    console.log(myCloud);
 
     const { name,email,password} = req.body;
 
@@ -48,6 +42,11 @@ exports.registerUserUsingPassword = catchAsyncErrors(async(req,res,next) => {
     if(userExist || userPasswordExist){
         return next(new ErrorHandler("User already registered, try logging in",401));
     }
+    const myCloud = await cloudinary.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 300,
+        crop: "scale"
+    });
 
     const user = await UserPassword.create({
         name,email,password,

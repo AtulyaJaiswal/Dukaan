@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import "./Products.css";
 import { useSelector, useDispatch } from "react-redux";
-import { clearErrors, getProduct } from "../../actions/productAction";
+import { clearErrors, getCategory, getProduct } from "../../actions/productAction";
 import Loader from "../layout/Loader/Loader";
 import ProductCard from "../Home/ProductCard";
 import Pagination from "../Pagination/Pagination";
@@ -10,22 +10,11 @@ import { toast } from "react-toastify";
 import Typography from "@mui/material/Typography";
 import MetaData from "../layout/MetaData";
 import { useParams } from "react-router-dom";
-
-const categories = [
-  "Mobiles & Accessories",
-  "Computers & Accessories",
-  "Electronics",
-  "Home, Kitchen",
-  "Men’s Fashion",
-  "Women’s Fashion",
-  "Sports, Fitness",
-  "Books",
-  "Industrial",
-];
+// import { profileReducer } from "../../reducers/userReducer";
 
 const Products = () => {
 
-  const { keyW, page:pageNum } = useParams();
+  const { keyword } = useParams();
   const dispatch = useDispatch();
 
   const [price, setPrice] = useState([0, 100000]);
@@ -40,20 +29,11 @@ const Products = () => {
     // resultPerPage,
     pages: totalPages,
   } = useSelector((state) => state.products);
+  const {loading: categoryLoading, category: categoriesName, error: categoryError} = useSelector((state) => state.category);
 
-  const pageNumber = pageNum || 1;
+  const pageNumber = 1;
   const [page, setPage] = useState(pageNumber);
   const [pages, setPages] = useState(totalPages);
-
-  // console.log(totalPages);
-  // console.log(resultPerPage);
-  // console.log(productsCount);
-
-  const keyword = keyW;
-
-  // const setCurrentPageNo = (e) => {
-  //   setCurrentPage(e);
-  // };
 
   const priceHandler = (event, newPrice) => {
     setPrice(newPrice);
@@ -72,8 +52,14 @@ const Products = () => {
       dispatch(clearErrors());
     }
 
+    if(categoryError){
+      toast.error(categoryError);
+      dispatch(clearErrors());
+    }
+    
     dispatch(getProduct(keyword, page, price, category, ratings));
-  }, [dispatch, error, page]);
+    dispatch(getCategory());
+  }, [dispatch, error, page, keyword, categoryError]);
 
   useEffect(() => {
     setPages(totalPages);
@@ -81,7 +67,7 @@ const Products = () => {
 
   return (
     <Fragment>
-      {loading ? (
+      {loading || categoryLoading ? (
         <Loader />
       ) : (
         <Fragment>
@@ -89,6 +75,10 @@ const Products = () => {
           <h2 className="productsHeading">Products</h2>
 
           <div className="products">
+            {(products.length===0) && 
+            <div className="noProductsFound">
+                <h4>No Products Found</h4>
+            </div>}
             {products &&
               products.map((product) => (
                 <ProductCard key={product._id} product={product} />
@@ -108,13 +98,13 @@ const Products = () => {
 
             <Typography>Categories</Typography>
             <ul className="categoryBox">
-              {categories.map((category) => (
+              {categoriesName && categoriesName.map((category) => (
                 <li
                   className="category-link"
-                  key={category}
-                  onClick={() => setCategory(category)}
+                  key={category.categoryName}
+                  onClick={() => setCategory(category.categoryName)}
                 >
-                  {category}
+                  {category.categoryName}
                 </li>
               ))}
             </ul>

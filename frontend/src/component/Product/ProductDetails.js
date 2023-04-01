@@ -18,6 +18,7 @@ const ProductDetails = () => {
     const dispatch = useDispatch();
 
     const { id } = useParams();
+    console.log(id);
 
     const {product,loading,error} = useSelector((state) => state.productDetails)
 

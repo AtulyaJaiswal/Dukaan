@@ -7,6 +7,12 @@ import {
   ADMIN_PRODUCT_REQUEST,
   ADMIN_PRODUCT_SUCCESS,
   ADMIN_PRODUCT_FAIL,
+  NEW_CATEGORY_REQUEST,
+  NEW_CATEGORY_SUCCESS,
+  NEW_CATEGORY_FAIL,
+  ADMIN_CATEGORY_REQUEST, 
+  ADMIN_CATEGORY_SUCCESS,
+  ADMIN_CATEGORY_FAIL,
   NEW_PRODUCT_REQUEST,
   NEW_PRODUCT_SUCCESS,
   NEW_PRODUCT_FAIL,
@@ -35,6 +41,8 @@ import {
 export const getProduct =
   (keyword = "", page = 1, price = [0, 25000], category, ratings = 0) =>
   async (dispatch) => {
+
+    console.log(keyword);
     try {
       dispatch({ type: ALL_PRODUCT_REQUEST });
 
@@ -101,6 +109,54 @@ export const createProduct = (name,price,description,category,Stock,images) => a
   } catch (error) {
     dispatch({
       type: NEW_PRODUCT_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+//CREATE CATEGORY
+export const createCategory = (categoryName, photoCategory) => async (dispatch) => {
+  try {
+    dispatch({ type: NEW_CATEGORY_REQUEST });
+
+    const config = {
+      headers: { "Content-Type": "application/json" },
+    };
+
+    const { data } = await axios.post(
+      `/api/v1/admin/category/new`,
+      {categoryName, photoCategory},
+      config
+    );
+
+    dispatch({
+      type: NEW_CATEGORY_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: NEW_CATEGORY_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Get All Category
+export const getCategory = () => async (dispatch) => {
+  try {
+    dispatch({ type: ADMIN_CATEGORY_REQUEST });
+
+    const { data } = await axios.get("/api/v1/category");
+
+    console.log(data);
+
+    dispatch({
+      type: ADMIN_CATEGORY_SUCCESS,
+      payload: data.category,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_CATEGORY_FAIL,
       payload: error.response.data.message,
     });
   }

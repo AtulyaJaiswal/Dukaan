@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect } from "react";
 import "./Home.css";
 import Carousel from 'react-material-ui-carousel';
-import ProductCard from "./ProductCard.js";
+import CategoryCard from "./CategoryCard.js";
 import MetaData from "../layout/MetaData";
-import { getProduct } from "../../actions/productAction";
+import { clearErrors, getCategory } from "../../actions/productAction";
 import { useSelector, useDispatch } from "react-redux";
 import Loader from "../layout/Loader/Loader";
 import {toast} from "react-toastify";
@@ -18,7 +18,8 @@ import BG8 from "../../Images/Background8.jpg";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { products, loading, error, } = useSelector((state) => state.products);
+
+  const {loading, category, error} = useSelector((state) => state.category);
 
   var items = [
     {
@@ -57,11 +58,11 @@ const Home = () => {
 
   useEffect(() => {
     if (error) {
-      return toast.error(error);
-      // dispatch(clearErrors());
+      toast.error(error);
+      dispatch(clearErrors());
     }
 
-    dispatch(getProduct());
+    dispatch(getCategory());
   }, [dispatch, error]);
     
 
@@ -84,12 +85,12 @@ const Home = () => {
           </Carousel>
 
           <div className="homeOther">
-            <h2 className="homeHeading">Featured Products</h2>
+            <h2 className="homeHeading">Featured</h2>
 
             <div className="container" id="container">
-              {products &&
-                products.map((product) => (
-                  <ProductCard key={product._id} product={product} />
+              {category &&
+                category.map((cat) => (
+                  <CategoryCard key={cat._id} cat={cat} />
                 ))}   
             </div>
           </div>

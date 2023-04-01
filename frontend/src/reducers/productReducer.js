@@ -9,6 +9,13 @@ import {
     NEW_PRODUCT_SUCCESS,
     NEW_PRODUCT_FAIL,
     NEW_PRODUCT_RESET,
+    NEW_CATEGORY_REQUEST,
+    NEW_CATEGORY_SUCCESS,
+    NEW_CATEGORY_RESET,
+    NEW_CATEGORY_FAIL,
+    ADMIN_CATEGORY_REQUEST, 
+    ADMIN_CATEGORY_SUCCESS,
+    ADMIN_CATEGORY_FAIL,
     UPDATE_PRODUCT_REQUEST,
     UPDATE_PRODUCT_SUCCESS,
     UPDATE_PRODUCT_FAIL,
@@ -75,9 +82,10 @@ export const productsReducer = (state = { products: [] }, action) => {
     }
 };
   
-export const newProductReducer = (state = { product: {} }, action) => {
+export const newProductCategoryReducer = (state = { product: {} }, action) => {
     switch (action.type) {
       case NEW_PRODUCT_REQUEST:
+      case NEW_CATEGORY_REQUEST:
         return {
           ...state,
           loading: true,
@@ -88,13 +96,21 @@ export const newProductReducer = (state = { product: {} }, action) => {
           success: action.payload.success,
           product: action.payload.product,
         };
+      case NEW_CATEGORY_SUCCESS:
+        return {
+          loading: false,
+          success: action.payload.success,
+          message: action.payload.message,
+        };
       case NEW_PRODUCT_FAIL:
+      case NEW_CATEGORY_FAIL:
         return {
           ...state,
           loading: false,
           error: action.payload,
         };
       case NEW_PRODUCT_RESET:
+      case NEW_CATEGORY_RESET:
         return {
           ...state,
           success: false,
@@ -183,6 +199,34 @@ export const productDetailsReducer = (state = { product: {} }, action) => {
       default:
         return state;
     }
+};
+
+export const categoryDetailsReducer = (state = { category: [] }, action) => {
+  switch (action.type) {
+    case ADMIN_CATEGORY_REQUEST:
+      return {
+        loading: true,
+        ...state,
+      };
+    case ADMIN_CATEGORY_SUCCESS:
+      return {
+        loading: false,
+        category: action.payload,
+      };
+    case ADMIN_CATEGORY_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+    default:
+      return state;
+  }
 };
   
 export const newReviewReducer = (state = {}, action) => {

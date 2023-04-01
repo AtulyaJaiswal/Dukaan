@@ -9,7 +9,7 @@
     left: 8rem;
   }
   .margin{
-    margin-bottom: 40rem;
+    margin-bottom: 30rem;
   }
   .homeHeading {
     text-align: center;
@@ -20,7 +20,7 @@
     color: black;
     border-bottom: 1px solid rgba(21, 21, 21, 0.5);
     width: 20vmax;
-    padding: 1vmax;
+    padding: 3vmax;
     margin: auto;
     color: rgb(0, 0, 0, 0.7);
   }
@@ -32,6 +32,20 @@
     flex-wrap: wrap;
     justify-content: center;
     max-width: 100%;
+  }
+
+  .category{
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+    margin: 1rem;
+    color: black;
+  }
+  .category > p{
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 1rem;
+    text-decoration: underline;
   }
   
   .productCard {

@@ -258,4 +258,10 @@
   .signUpForm {
     padding: 5vmax;
   }
+  .loginForm > div > input , .signUpForm > div > input{
+    font-size: 1rem;
+  }
+  #registerImage > input{
+    z-index: 0;
+  }
 }

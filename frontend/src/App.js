@@ -43,6 +43,7 @@ import Contact from "./component/layout/Contact/Contact";
 import About from "./component/layout/About/About";
 import NotFound from "./component/layout/NotFound/NotFound";
 import MenuIcon from '@mui/icons-material/Menu';
+import Category from "./component/Admin/Category";
 
 function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
@@ -160,6 +161,8 @@ function App() {
 
             <Route path="/admin/users" element={<ProtectedRoute isAdmin={true} Component={UsersList}/>}/>
 
+            <Route path="/admin/category" element={<ProtectedRoute isAdmin={true} Component={Category}/>}/>
+
             <Route path="*" element={
                 window.location.pathname === "/process/payment" ? null : <NotFound/>
               }
@@ -174,4 +177,3 @@ export default App;
 
 // Notes
 // 2. Different Loader
-//  page numbering after filtering categories

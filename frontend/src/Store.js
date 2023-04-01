@@ -1,10 +1,29 @@
 import {createStore, combineReducers, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
 import {composeWithDevTools} from "redux-devtools-extension";
-import { newProductReducer, newReviewReducer, productDetailsReducer, productReducer, productReviewsReducer, productsReducer, reviewReducer } from "./reducers/productReducer";
-import { allUsersReducer, forgotPasswordReducer, otpReducer, profileReducer, userDetailsReducer, userReducer } from "./reducers/userReducer";
+import { categoryDetailsReducer, 
+         newProductCategoryReducer, 
+         newReviewReducer, 
+         productDetailsReducer, 
+         productReducer, 
+         productReviewsReducer, 
+         productsReducer, 
+         reviewReducer 
+        } from "./reducers/productReducer";
+import { allUsersReducer, 
+         forgotPasswordReducer, 
+         otpReducer, 
+         profileReducer, 
+         userDetailsReducer, 
+         userReducer 
+        } from "./reducers/userReducer";
 import { cartReducer } from "./reducers/cartReducer";
-import { allOrdersReducer, myOrdersReducer, newOrderReducer, orderDetailsReducer, orderReducer } from "./reducers/orderReducer";
+import { allOrdersReducer, 
+         myOrdersReducer, 
+         newOrderReducer, 
+         orderDetailsReducer, 
+         orderReducer 
+        } from "./reducers/orderReducer";
 
 const reducer = combineReducers({
     products: productsReducer,
@@ -17,8 +36,9 @@ const reducer = combineReducers({
     myOrders: myOrdersReducer,
     orderDetails: orderDetailsReducer,
     newReview: newReviewReducer,
-    newProduct: newProductReducer,
+    newProductCategory: newProductCategoryReducer,
     product: productReducer,
+    category: categoryDetailsReducer,
     allOrders: allOrdersReducer,
     order: orderReducer,
     allUsers: allUsersReducer,
@@ -37,9 +57,6 @@ let initialState = {
         ? JSON.parse(localStorage.getItem("shippingInfo"))
         : {},
     },
-    // stripeKey : localStorage.getItem("stripeKey")
-    //             ? JSON.parse(localStorage.getItem("stripeKey"))
-    //             : "",
 };
 
 const middleware = [

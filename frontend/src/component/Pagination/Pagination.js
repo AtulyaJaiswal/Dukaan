@@ -2,7 +2,6 @@ import "./Pagination.css";
 
 const Pagination = ({ page, pages, changePage }) => {
   let middlePagination;
-  console.log(pages);
 
   if (pages <= 5) {
     middlePagination = [...Array(pages)].map((_, idx) => (

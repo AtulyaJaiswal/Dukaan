@@ -1,0 +1,132 @@
+#createCategoryFormImage {
+     width: 100%;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     overflow: auto;
+}
+
+#createCategoryFormImage > img {
+     width: 16vmax;
+     margin: 0 0.5vmax;
+}
+
+.categoryDashboard{
+     width: 100vw;
+     max-width: 100%;
+     display: grid;
+     grid-template-columns: 1fr 5fr;
+     position: absolute;
+}
+.categoryHeading{
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin-left: 10vmax;
+     margin-right: 10vmax;
+     margin-top: 5vmax;
+     margin-bottom: 2vmax;
+}
+.categoryDetails{
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     margin: 1vmax 10vmax;
+}
+.categoryDetails > p{
+     font-size: 1.5vmax;
+     font-weight: 600;
+}
+
+.newCategoryContainer {
+     width: 100%;
+     box-sizing: border-box;
+     background-color: rgb(221, 221, 221);
+     border-left: 1px solid rgba(0, 0, 0, 0.158);
+     display: flex;
+     flex-direction: column;
+     height: max-content;
+     padding-top: 2vmax;
+}
+.newCategoryContainer h1 {
+     color: rgba(0, 0, 0, 0.733);
+     font: 300 2rem "Roboto";
+     text-align: center;
+}
+
+.createCategoryForm {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     margin: auto;
+     padding: 3vmax;
+     justify-content: space-evenly;
+     height: max-content;
+     width: 40vh;
+     background-color: white;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.267);
+}
+   
+.createCategoryForm > div {
+     display: flex;
+     width: 100%;
+     align-items: center;
+     padding: 1vmax;
+}
+.createCategoryForm > div > input,
+.createCategoryForm > div > select,
+.createCategoryForm > div > textarea {
+     padding: 1vmax 4vmax;
+     padding-right: 1vmax;
+     width: 100%;
+     box-sizing: border-box;
+     border: 1px solid rgba(0, 0, 0, 0.267);
+     border-radius: 4px;
+     font: 300 0.9vmax cursive;
+     outline: none;
+   }
+   
+.createCategoryForm > div > svg {
+     position: absolute;
+     transform: translateX(1vmax);
+     font-size: 1.6vmax;
+     color: rgba(0, 0, 0, 0.623);
+}
+
+
+@media screen and (max-width: 600px){
+
+     .categoryDashboard {
+          grid-template-columns: 1fr;
+     }
+
+     .newCategoryContainer {
+          background-color: rgb(255, 255, 255);
+     }
+
+     .createCategoryForm {
+          padding: 5vmax;
+     }
+      
+     .createCategoryForm > div > input,
+     .createCategoryForm > div > select,
+     .createCategoryForm > div > textarea {
+          padding: 2.5vmax 5vmax;
+          font: 300 1.7vmax cursive;
+     }
+      
+     .createCategoryForm > div > svg {
+          font-size: 2.8vmax;
+     }
+      
+
+     .categoryHeading , .categoryDetails{
+          margin: 0;
+          margin: 3vmax 3vmax;
+     }
+
+     .categoryDetails > img{
+          height: 12vmax;
+          width: 20vmax;
+     }
+}

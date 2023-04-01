@@ -230,7 +230,7 @@ const Shipping = () => {
 
             <button
               className={verifyOtp && verifyPinCode ? "shippingBtn" : "shippingBtnDisable"}
-              disabled={verifyOtp===false && verifyPinCode===false} //|| krna hai
+              disabled={verifyOtp===false || verifyPinCode===false} //|| krna hai
               onClick={shippingSubmit}
             >
             Continue

@@ -110,6 +110,12 @@
   outline: none;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.219);
 }
+.noProductsFound{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 7rem;
+}
 
 @media screen and (max-width: 600px) {
   .products{
@@ -126,5 +132,8 @@
   }
   .category-link {
     font: 400 1.8vmax "Roboto";
+  }
+  .noProductsFound{
+    margin: 0;
   }
 }

@@ -1,4 +1,5 @@
 const Product = require("../models/productModel");
+const Category = require("../models/categoryModel");
 const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ApiFeatures = require("../utils/apiFeatures");
@@ -52,18 +53,54 @@ exports.createProduct = catchAsyncErrors(async (req,res,next) => {
     })
 });
 
+//CREATE CATEGORY
+exports.createCategory = catchAsyncErrors(async (req,res) =>{
+
+    const{ categoryName } = req.body
+
+    const category = await Category.findOne({ categoryName });
+    if(category) return next(new ErrorHandler("Category already exists"));
+
+    const myCloud = await cloudinary.uploader.upload(req.body.photoCategory, {
+        folder: "category",
+        width: 300,
+        crop: "scale"
+    });
+
+    await Category.create({
+        categoryName,
+        photoCategory:{
+            public_id: myCloud.public_id,
+            url: myCloud.secure_url,
+        }
+    });
+
+    res.status(200).json({
+        success: true,
+        message: "Category created",
+    });
+});
+
+//GET ALL CATEGORY
+exports.getAllCategory = catchAsyncErrors(async (req,res,next) => {
+
+    const category = await Category.find();
+
+    res.status(200).json({
+        success:true,
+        category,
+    });
+});
+
 
 //GET ALL PRODUCTS
 exports.getAllProducts = catchAsyncErrors(async (req,res) =>{
 
     const resultPerPage=8;
-
-    // const productsCount = await Product.countDocuments();
     
     const apiFeature = new ApiFeatures(Product.find(), req.query)
         .search()
         .filter();
-    // apiFeature.pagination(resultPerPage);
 
     let products = await apiFeature.query;
 
@@ -71,7 +108,10 @@ exports.getAllProducts = catchAsyncErrors(async (req,res) =>{
     const pages = Math.ceil(productsCount / resultPerPage);
     
     const apiFeature2 = new ApiFeatures(Product.find(), req.query)
-    apiFeature2.pagination(resultPerPage);
+        .search()
+        .filter()
+        .pagination(resultPerPage);
+        
     products = await apiFeature2.query;
 
     res.status(200).json({

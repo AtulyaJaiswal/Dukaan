@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import "./NewProduct.css";
 import { useSelector, useDispatch } from "react-redux";
-import { clearErrors, createProduct } from "../../actions/productAction";
+import { clearErrors, createProduct, getCategory } from "../../actions/productAction";
 import { toast } from "react-toastify";
 import { Button } from "@mui/material";
 import MetaData from "../layout/MetaData";
@@ -20,7 +20,8 @@ const NewProduct = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { loading, error, success } = useSelector((state) => state.newProduct);
+  const { loading, error, success } = useSelector((state) => state.newProductCategory);
+  const {loading: categoryLoading, category: categoriesName, error: categoryError} = useSelector((state) => state.category);
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
@@ -48,28 +49,27 @@ const NewProduct = () => {
       dispatch(clearErrors());
     }
 
+    if(categoryError){
+      toast.error(categoryError);
+      dispatch(clearErrors());
+    }
+
     if (success) {
       toast.success("Product Created Successfully");
       navigate("/admin/product");
       dispatch({ type: NEW_PRODUCT_RESET });
     }
-  }, [dispatch, toast, error, navigate, success]);
+    dispatch(getCategory());
+  }, [dispatch, error, navigate, success]);
 
   const createProductSubmitHandler = (e) => {
     e.preventDefault();
 
-    const myForm = new FormData();
-
-    myForm.set("name", name);
-    myForm.set("price", price);
-    myForm.set("description", description);
-    myForm.set("category", category);
-    myForm.set("Stock", Stock);
     dispatch(createProduct(name,price,description,category,Stock,images));
   };
 
   const createProductImagesChange = (e) => {
-    const files = Array.from(e.target.files); //array bna dega files ki Arrays.from
+    const files = Array.from(e.target.files);
 
     setImages([]);
     setImagesPreview([]);
@@ -91,7 +91,7 @@ const NewProduct = () => {
 
   return (
     <Fragment>
-      {loading ? (
+      {loading || categoryLoading ? (
         <Loader />
       ) : (
     <Fragment>
@@ -142,9 +142,9 @@ const NewProduct = () => {
               <AccountTreeIcon />
               <select onChange={(e) => setCategory(e.target.value)}>
                 <option value="">Choose Category</option>
-                {categories.map((cate) => (
-                  <option key={cate} value={cate}>
-                    {cate}
+                {categoriesName && categoriesName.map((category) => (
+                  <option key={category.categoryName} value={category.categoryName}>
+                    {category.categoryName}
                   </option>
                 ))}
               </select>
