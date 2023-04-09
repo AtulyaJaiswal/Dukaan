@@ -192,8 +192,8 @@
     font: 600 0.9vmax "Roboto";
   }
   .reviewCardComment {
-    color: rgba(0, 0, 0, 0.445);
-    font: 300 0.8vmax cursive;
+    color: rgba(0, 0, 0, 0.685);
+    font: 800 0.8vmax cursive;
   }
   
   .noReviews {

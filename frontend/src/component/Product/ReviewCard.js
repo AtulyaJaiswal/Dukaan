@@ -3,6 +3,8 @@ import React from "react";
 // import profilePng from "../../images/Profile.png";
 
 const ReviewCard = ({ review }) => {
+
+  console.log(review);
   const options = {
     value: review.rating,
     readOnly: true,
@@ -11,7 +13,7 @@ const ReviewCard = ({ review }) => {
 
   return (
     <div className="reviewCard">
-      <img src={""} alt="User" />
+      {/* <img src={""} alt="User" /> */}
       <p>{review.name}</p>
       <Rating {...options} />
       <span className="reviewCardComment">{review.comment}</span>

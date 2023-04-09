@@ -12,12 +12,13 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import RateReviewIcon from "@mui/icons-material/RateReview";
 import CategoryIcon from '@mui/icons-material/Category';
+import Logo from "../../Images/logo.webp";
 
 const Sidebar = () => {
   return (
     <div className="sidebar">
       <Link to="/">
-        <img src="https://i0.wp.com/therumzzline.com/wp-content/uploads/2021/03/Ecommerce-site-logo-Online-Shopping-N-Shop-Logo-copy.jpg?resize=1400%2C700&ssl=1" 
+        <img src={Logo} 
         alt="Ecommerce" />
       </Link>
       <Link to="/admin/dashboard">
