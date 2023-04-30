@@ -40,9 +40,10 @@ const Products = () => {
   };
 
   const filterElements = () => {
-    dispatch(getProduct(keyword, page, price, category, ratings));
+    dispatch(getProduct(keyword, 1, price, category, ratings));
   }
   const removeFilterElements = () => {
+    //category hatt nii raa
     dispatch(getProduct());
   }
 
@@ -57,7 +58,7 @@ const Products = () => {
       dispatch(clearErrors());
     }
     
-    dispatch(getProduct(keyword, page, price, category, ratings));
+    dispatch(getProduct(keyword, page, price,category, ratings));
     dispatch(getCategory());
   }, [dispatch, error, page, keyword, categoryError]);
 

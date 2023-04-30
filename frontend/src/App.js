@@ -177,3 +177,4 @@ export default App;
 
 // Notes
 // 2. Different Loader
+// 1. Remove filter ho ya kuch bhi ho to go to page 1

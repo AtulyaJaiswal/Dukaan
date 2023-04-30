@@ -39,7 +39,7 @@ import {
 
 // Get All Products
 export const getProduct =
-  (keyword = "", page = 1, price = [0, 25000], category, ratings = 0) =>
+  (keyword = "", page = 1, price = [0, 100000], category, ratings = 0) =>
   async (dispatch) => {
 
     console.log(keyword);
@@ -147,8 +147,6 @@ export const getCategory = () => async (dispatch) => {
     dispatch({ type: ADMIN_CATEGORY_REQUEST });
 
     const { data } = await axios.get("/api/v1/category");
-
-    console.log(data);
 
     dispatch({
       type: ADMIN_CATEGORY_SUCCESS,

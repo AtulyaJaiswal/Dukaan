@@ -11,8 +11,6 @@ const Profile = () => {
 
   const { user, loading, isAuthenticated } = useSelector((state) => state.user);
 
-  console.log(user.avatar.url);
-
   useEffect(() => {
     if (isAuthenticated === false || user===null) {
       navigate("/login");

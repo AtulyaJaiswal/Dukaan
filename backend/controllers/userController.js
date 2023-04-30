@@ -4,7 +4,7 @@ const User = require('../models/userModel');
 const UserPassword = require('../models/userModel2');
 const sendToken = require("../utils/jwtToken");
 const sendEmail = require("../utils/sendEmail");
-const crypto = require("crypto");
+// const crypto = require("crypto");
 const cloudinary = require("cloudinary").v2;
 
 //REGISTER USER
