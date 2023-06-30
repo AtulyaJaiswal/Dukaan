@@ -1,7 +1,11 @@
 import React, { Fragment, useEffect, useState } from "react";
 import "./Products.css";
 import { useSelector, useDispatch } from "react-redux";
-import { clearErrors, getCategory, getProduct } from "../../actions/productAction";
+import {
+  clearErrors,
+  getCategory,
+  getProduct,
+} from "../../actions/productAction";
 import Loader from "../layout/Loader/Loader";
 import ProductCard from "../Home/ProductCard";
 import Pagination from "../Pagination/Pagination";
@@ -13,7 +17,6 @@ import { useParams } from "react-router-dom";
 // import { profileReducer } from "../../reducers/userReducer";
 
 const Products = () => {
-
   const { keyword } = useParams();
   const dispatch = useDispatch();
 
@@ -29,7 +32,11 @@ const Products = () => {
     // resultPerPage,
     pages: totalPages,
   } = useSelector((state) => state.products);
-  const {loading: categoryLoading, category: categoriesName, error: categoryError} = useSelector((state) => state.category);
+  const {
+    loading: categoryLoading,
+    category: categoriesName,
+    error: categoryError,
+  } = useSelector((state) => state.category);
 
   const pageNumber = 1;
   const [page, setPage] = useState(pageNumber);
@@ -41,11 +48,11 @@ const Products = () => {
 
   const filterElements = () => {
     dispatch(getProduct(keyword, 1, price, category, ratings));
-  }
+  };
   const removeFilterElements = () => {
     //category hatt nii raa
     dispatch(getProduct());
-  }
+  };
 
   useEffect(() => {
     if (error) {
@@ -53,12 +60,12 @@ const Products = () => {
       dispatch(clearErrors());
     }
 
-    if(categoryError){
+    if (categoryError) {
       toast.error(categoryError);
       dispatch(clearErrors());
     }
-    
-    dispatch(getProduct(keyword, page, price,category, ratings));
+
+    dispatch(getProduct(keyword, page, price, category, ratings));
     dispatch(getCategory());
   }, [dispatch, error, page, keyword, categoryError]);
 
@@ -76,10 +83,11 @@ const Products = () => {
           <h2 className="productsHeading">Products</h2>
 
           <div className="products">
-            {(products.length===0) && 
-            <div className="noProductsFound">
+            {products && products.length === 0 && (
+              <div className="noProductsFound">
                 <h4>No Products Found</h4>
-            </div>}
+              </div>
+            )}
             {products &&
               products.map((product) => (
                 <ProductCard key={product._id} product={product} />
@@ -99,19 +107,21 @@ const Products = () => {
 
             <Typography>Categories</Typography>
             <ul className="categoryBox">
-              {categoriesName && categoriesName.map((category) => (
-                <li
-                  className="category-link"
-                  key={category.categoryName}
-                  onClick={() => setCategory(category.categoryName)}
-                >
-                  {category.categoryName}
-                </li>
-              ))}
+              {categoriesName &&
+                categoriesName.map((category) => (
+                  <li
+                    className="category-link"
+                    key={category.categoryName}
+                    onClick={() => setCategory(category.categoryName)}>
+                    {category.categoryName}
+                  </li>
+                ))}
             </ul>
 
             <fieldset>
-              <Typography style={{fontSize:"1vmax"}} component="legend">Ratings Above</Typography>
+              <Typography style={{ fontSize: "1vmax" }} component="legend">
+                Ratings Above
+              </Typography>
               <Slider
                 value={ratings}
                 onChange={(e, newRating) => {
@@ -131,13 +141,9 @@ const Products = () => {
             </div>
           </div>
           {/* {resultPerPage < count && ( */}
-            <div className="paginationBox">
-              <Pagination 
-                page={page} 
-                pages={pages} 
-                changePage={setPage} 
-              />
-            </div>
+          <div className="paginationBox">
+            <Pagination page={page} pages={pages} changePage={setPage} />
+          </div>
           {/* )} */}
         </Fragment>
       )}

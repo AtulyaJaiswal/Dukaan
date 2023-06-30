@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from "react";
 import "./Header.css";
 import { SpeedDial, SpeedDialAction } from "@mui/material";
-import Backdrop from '@mui/material/Backdrop'; //NEW && IMPORTANT
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import PersonIcon from '@mui/icons-material/Person';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Backdrop from "@mui/material/Backdrop"; //NEW && IMPORTANT
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PersonIcon from "@mui/icons-material/Person";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { logout } from "../../../actions/userAction";
@@ -26,7 +26,9 @@ const UserOptions = ({ user }) => {
     {
       icon: (
         <ShoppingCartIcon
-          style={{ color: cartItems.length > 0 ? "rgba(8, 8, 211, 0.781)" : "unset" }}
+          style={{
+            color: cartItems.length > 0 ? "rgba(8, 8, 211, 0.781)" : "unset",
+          }}
         />
       ),
       name: `Cart(${cartItems.length})`,
@@ -41,6 +43,18 @@ const UserOptions = ({ user }) => {
       name: "Dashboard",
       func: dashboard,
     });
+  }
+
+  if (user.role === "vendor") {
+    options.unshift({
+      icon: <DashboardIcon />,
+      name: "Vendor Dashboard",
+      func: vendorDashboard,
+    });
+  }
+
+  function vendorDashboard() {
+    navigate("/vendor/dashboard");
   }
 
   function dashboard() {
@@ -75,11 +89,10 @@ const UserOptions = ({ user }) => {
         icon={
           <img
             className="speedDialIcon"
-            src={user.avatar.url ? user.avatar.url : {Profile}}
+            src={user.avatar.url ? user.avatar.url : { Profile }}
             alt="Profile"
           />
-        }
-      >
+        }>
         {options.map((item) => (
           <SpeedDialAction
             key={item.name}

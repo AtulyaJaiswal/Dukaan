@@ -43,6 +43,15 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
+  CREATE_DISCOUNT_CARD_REQUEST,
+  CREATE_DISCOUNT_CARD_SUCCESS,
+  CREATE_DISCOUNT_CARD_FAIL,
+  GET_ALL_DISCOUNT_REQUEST,
+  GET_ALL_DISCOUNT_SUCCESS,
+  GET_ALL_DISCOUNT_FAIL,
+  DELETE_DISCOUNT_CARD_REQUEST,
+  DELETE_DISCOUNT_CARD_SUCCESS,
+  DELETE_DISCOUNT_CARD_FAIL,
   CLEAR_ERRORS,
 } from "../constants/userConstants";
 import axios from "axios";
@@ -54,11 +63,7 @@ export const login = (email) => async (dispatch) => {
 
     const config = { headers: { "Content-Type": "application/json" } };
 
-    const { data } = await axios.post(
-      `/api/v1/login`,
-      { email,},
-      config
-    );
+    const { data } = await axios.post(`/api/v1/login`, { email }, config);
 
     dispatch({ type: LOGIN_SUCCESS, payload: data.user });
   } catch (error) {
@@ -67,7 +72,7 @@ export const login = (email) => async (dispatch) => {
 };
 
 // Login using Password
-export const loginUsingPassword = (email,password) => async (dispatch) => {
+export const loginUsingPassword = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: LOGIN_PASSWORD_REQUEST });
 
@@ -75,13 +80,16 @@ export const loginUsingPassword = (email,password) => async (dispatch) => {
 
     const { data } = await axios.post(
       `/api/v1/loginUsingPassword`,
-      { email, password},
+      { email, password },
       config
     );
-    
+
     dispatch({ type: LOGIN_PASSWORD_SUCCESS, payload: data.user });
   } catch (error) {
-    dispatch({ type: LOGIN_PASSWORD_FAIL, payload: error.response.data.message });
+    dispatch({
+      type: LOGIN_PASSWORD_FAIL,
+      payload: error.response.data.message,
+    });
   }
 };
 
@@ -95,7 +103,6 @@ export const register = (userData) => async (dispatch) => {
     const { data } = await axios.post(`/api/v1/register`, userData, config);
 
     dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user });
-
   } catch (error) {
     dispatch({
       type: REGISTER_USER_FAIL,
@@ -105,24 +112,27 @@ export const register = (userData) => async (dispatch) => {
 };
 
 //Register using password
-export const registerUsingPassword = (email,password,avatar,name) => async (dispatch) => {
-  try {
-    dispatch({ type: REGISTER_USER_PASSWORD_REQUEST });
+export const registerUsingPassword =
+  (email, password, avatar, name, role) => async (dispatch) => {
+    try {
+      dispatch({ type: REGISTER_USER_PASSWORD_REQUEST });
 
-    const config = { headers: { "Content-Type": "application/json" } };
-    console.log(name,email,password);
+      const config = { headers: { "Content-Type": "application/json" } };
 
-    const { data } = await axios.post(`/api/v1/registerUsingPassword`, {email,password,avatar,name}, config);
+      const { data } = await axios.post(
+        `/api/v1/registerUsingPassword`,
+        { email, password, avatar, name, role },
+        config
+      );
 
-    dispatch({ type: REGISTER_USER_PASSWORD_SUCCESS, payload: data.user });
-
-  } catch (error) {
-    dispatch({
-      type: REGISTER_USER_PASSWORD_FAIL,
-      payload: error.response.data.message,
-    });
-  }
-};
+      dispatch({ type: REGISTER_USER_PASSWORD_SUCCESS, payload: data.user });
+    } catch (error) {
+      dispatch({
+        type: REGISTER_USER_PASSWORD_FAIL,
+        payload: error.response.data.message,
+      });
+    }
+  };
 
 //Sending OTP
 export const sendOTP = (email) => async (dispatch) => {
@@ -131,23 +141,26 @@ export const sendOTP = (email) => async (dispatch) => {
 
     const config = { headers: { "Content-Type": "application/json" } };
 
-    const { data } = await axios.post(`/api/v1/sendOtp`, {email, str: "otp"}, config);
+    const { data } = await axios.post(
+      `/api/v1/sendOtp`,
+      { email, str: "otp" },
+      config
+    );
 
     dispatch({ type: SEND_OTP_SUCCESS, payload: data });
-
   } catch (error) {
     dispatch({
       type: SEND_OTP_FAIL,
       payload: error.response.data.message,
     });
   }
-}
+};
 
 // Load User
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: LOAD_USER_REQUEST });
-    
+
     const { data } = await axios.get(`/api/v1/me`);
 
     dispatch({ type: LOAD_USER_SUCCESS, payload: data.user });
@@ -168,14 +181,18 @@ export const logout = () => async (dispatch) => {
 };
 
 // Update Profile
-export const updateProfile = (name,avatar) => async (dispatch) => {
+export const updateProfile = (name, avatar) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_PROFILE_REQUEST });
 
     const config = { headers: { "Content-Type": "application/json" } };
     console.log(avatar);
 
-    const { data } = await axios.put(`/api/v1/me/update`, {name,avatar}, config);
+    const { data } = await axios.put(
+      `/api/v1/me/update`,
+      { name, avatar },
+      config
+    );
 
     dispatch({ type: UPDATE_PROFILE_SUCCESS, payload: data.success });
   } catch (error) {
@@ -215,7 +232,11 @@ export const forgotPassword = (email) => async (dispatch) => {
 
     const config = { headers: { "Content-Type": "application/json" } };
 
-    const { data } = await axios.post(`/api/v1/sendOtp`, {email, str: "forgot"}, config);
+    const { data } = await axios.post(
+      `/api/v1/sendOtp`,
+      { email, str: "forgot" },
+      config
+    );
 
     dispatch({ type: SEND_OTP_SUCCESS, payload: data });
   } catch (error) {
@@ -227,26 +248,27 @@ export const forgotPassword = (email) => async (dispatch) => {
 };
 
 // Reset Password
-export const resetPassword = (token, password, confirmPassword, userEmail) => async (dispatch) => {
-  try {
-    dispatch({ type: RESET_PASSWORD_REQUEST });
+export const resetPassword =
+  (token, password, confirmPassword, userEmail) => async (dispatch) => {
+    try {
+      dispatch({ type: RESET_PASSWORD_REQUEST });
 
-    const config = { headers: { "Content-Type": "application/json" } };
+      const config = { headers: { "Content-Type": "application/json" } };
 
-    const { data } = await axios.put(
-      `/api/v1/password/reset/${token}`,
-      {password, confirmPassword, userEmail},
-      config
-    );
+      const { data } = await axios.put(
+        `/api/v1/password/reset/${token}`,
+        { password, confirmPassword, userEmail },
+        config
+      );
 
-    dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data.success });
-  } catch (error) {
-    dispatch({
-      type: RESET_PASSWORD_FAIL,
-      payload: error.response.data.message,
-    });
-  }
-};
+      dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data.success });
+    } catch (error) {
+      dispatch({
+        type: RESET_PASSWORD_FAIL,
+        payload: error.response.data.message,
+      });
+    }
+  };
 
 // get All Users
 export const getAllUsers = () => async (dispatch) => {
@@ -273,7 +295,7 @@ export const getUserDetails = (id) => async (dispatch) => {
 };
 
 // Update User
-export const updateUser = (id, userData) => async (dispatch) => {
+export const updateUser = (id, name, email, role) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_USER_REQUEST });
 
@@ -281,7 +303,7 @@ export const updateUser = (id, userData) => async (dispatch) => {
 
     const { data } = await axios.put(
       `/api/v1/admin/user/${id}`,
-      userData,
+      { name, email, role },
       config
     );
 
@@ -305,6 +327,65 @@ export const deleteUser = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: DELETE_USER_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+//CREATE DISCOUNT CARD
+export const createDiscountCard =
+  (name, code, value, coins) => async (dispatch) => {
+    try {
+      dispatch({ type: CREATE_DISCOUNT_CARD_REQUEST });
+
+      const config = {
+        headers: { "Content-Type": "application/json" },
+      };
+
+      const { data } = await axios.post(
+        `/api/v1/admin/discountCard/new`,
+        { name, code, value, coins },
+        config
+      );
+
+      dispatch({
+        type: CREATE_DISCOUNT_CARD_SUCCESS,
+        payload: data.message,
+      });
+    } catch (error) {
+      dispatch({
+        type: CREATE_DISCOUNT_CARD_FAIL,
+        payload: error.response.data.message,
+      });
+    }
+  };
+
+// DELETE DISCOUNT CARD
+export const deleteDiscountCard = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: DELETE_DISCOUNT_CARD_REQUEST });
+
+    const { data } = await axios.delete(`/api/v1/admin/discountCard/${id}`);
+
+    dispatch({ type: DELETE_DISCOUNT_CARD_SUCCESS, payload: data.message });
+  } catch (error) {
+    dispatch({
+      type: DELETE_DISCOUNT_CARD_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+//GET ALL DISCOUNT CARD
+export const getAllDiscountCard = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_ALL_DISCOUNT_REQUEST });
+    const { data } = await axios.get(`/api/v1/admin/discount/all`);
+
+    dispatch({ type: GET_ALL_DISCOUNT_SUCCESS, payload: data.discount });
+  } catch (error) {
+    dispatch({
+      type: GET_ALL_DISCOUNT_FAIL,
       payload: error.response.data.message,
     });
   }

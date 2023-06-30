@@ -1,0 +1,18 @@
+.discountDashboard {
+  width: 100vw;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  position: absolute;
+}
+
+.discountHeading {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  align-items: center;
+  margin-top: 5vmax;
+}
+.discountHeading > p {
+  width: 3rem;
+}

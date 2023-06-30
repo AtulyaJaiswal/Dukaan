@@ -10,7 +10,7 @@ import {
   NEW_CATEGORY_REQUEST,
   NEW_CATEGORY_SUCCESS,
   NEW_CATEGORY_FAIL,
-  ADMIN_CATEGORY_REQUEST, 
+  ADMIN_CATEGORY_REQUEST,
   ADMIN_CATEGORY_SUCCESS,
   ADMIN_CATEGORY_FAIL,
   NEW_PRODUCT_REQUEST,
@@ -34,6 +34,9 @@ import {
   DELETE_REVIEW_REQUEST,
   DELETE_REVIEW_SUCCESS,
   DELETE_REVIEW_FAIL,
+  GET_ALL_VENDOR_PRODUCT_REQUEST,
+  GET_ALL_VENDOR_PRODUCT_SUCCESS,
+  GET_ALL_VENDOR_PRODUCT_FAIL,
   CLEAR_ERRORS,
 } from "../constants/productConstants";
 
@@ -41,8 +44,6 @@ import {
 export const getProduct =
   (keyword = "", page = 1, price = [0, 100000], category, ratings = 0) =>
   async (dispatch) => {
-
-    console.log(keyword);
     try {
       dispatch({ type: ALL_PRODUCT_REQUEST });
 
@@ -54,8 +55,6 @@ export const getProduct =
 
       const { data } = await axios.get(link);
 
-      // console.log(data);
-
       dispatch({
         type: ALL_PRODUCT_SUCCESS,
         payload: data,
@@ -66,7 +65,7 @@ export const getProduct =
         payload: error.response.data.message,
       });
     }
-};
+  };
 
 // Get All Products For Admin
 export const getAdminProduct = () => async (dispatch) => {
@@ -88,58 +87,69 @@ export const getAdminProduct = () => async (dispatch) => {
 };
 
 // Create Product
-export const createProduct = (name,price,description,category,Stock,images) => async (dispatch) => {
-  try {
-    dispatch({ type: NEW_PRODUCT_REQUEST });
+export const createProduct =
+  (name, originalPrice, sellingPrice, description, category, Stock, images) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: NEW_PRODUCT_REQUEST });
 
-    const config = {
-      headers: { "Content-Type": "application/json" },
-    };
+      const config = {
+        headers: { "Content-Type": "application/json" },
+      };
 
-    const { data } = await axios.post(
-      `/api/v1/admin/product/new`,
-      {name,price,description,category,Stock,images},
-      config
-    );
+      const { data } = await axios.post(
+        `/api/v1/admin/product/new`,
+        {
+          name,
+          originalPrice,
+          sellingPrice,
+          description,
+          category,
+          Stock,
+          images,
+        },
+        config
+      );
 
-    dispatch({
-      type: NEW_PRODUCT_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: NEW_PRODUCT_FAIL,
-      payload: error.response.data.message,
-    });
-  }
-};
+      dispatch({
+        type: NEW_PRODUCT_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: NEW_PRODUCT_FAIL,
+        payload: error.response.data.message,
+      });
+    }
+  };
 
 //CREATE CATEGORY
-export const createCategory = (categoryName, photoCategory) => async (dispatch) => {
-  try {
-    dispatch({ type: NEW_CATEGORY_REQUEST });
+export const createCategory =
+  (categoryName, photoCategory) => async (dispatch) => {
+    try {
+      dispatch({ type: NEW_CATEGORY_REQUEST });
 
-    const config = {
-      headers: { "Content-Type": "application/json" },
-    };
+      const config = {
+        headers: { "Content-Type": "application/json" },
+      };
 
-    const { data } = await axios.post(
-      `/api/v1/admin/category/new`,
-      {categoryName, photoCategory},
-      config
-    );
+      const { data } = await axios.post(
+        `/api/v1/admin/category/new`,
+        { categoryName, photoCategory },
+        config
+      );
 
-    dispatch({
-      type: NEW_CATEGORY_SUCCESS,
-      payload: data,
-    });
-  } catch (error) {
-    dispatch({
-      type: NEW_CATEGORY_FAIL,
-      payload: error.response.data.message,
-    });
-  }
-};
+      dispatch({
+        type: NEW_CATEGORY_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: NEW_CATEGORY_FAIL,
+        payload: error.response.data.message,
+      });
+    }
+  };
 
 // Get All Category
 export const getCategory = () => async (dispatch) => {
@@ -207,11 +217,11 @@ export const deleteProduct = (id) => async (dispatch) => {
 };
 
 // Get Products Details
-export const getProductDetails = (id) => async (dispatch) => {
+export const getProductDetails = (id, user_id) => async (dispatch) => {
   try {
     dispatch({ type: PRODUCT_DETAILS_REQUEST });
 
-    const { data } = await axios.get(`/api/v1/product/${id}`);
+    const { data } = await axios.get(`/api/v1/product/${id}/${user_id}`);
 
     dispatch({
       type: PRODUCT_DETAILS_SUCCESS,
@@ -283,6 +293,25 @@ export const deleteReviews = (reviewId, productId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: DELETE_REVIEW_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// Get All Products For Vendor
+export const getVendorProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_ALL_VENDOR_PRODUCT_REQUEST });
+
+    const { data } = await axios.get("/api/v1/vendor/products");
+
+    dispatch({
+      type: GET_ALL_VENDOR_PRODUCT_SUCCESS,
+      payload: data.products,
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_ALL_VENDOR_PRODUCT_FAIL,
       payload: error.response.data.message,
     });
   }

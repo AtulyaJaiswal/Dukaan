@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Rating from '@mui/material/Rating';
+import Rating from "@mui/material/Rating";
 
 const ProductCard = ({ product }) => {
   const options = {
-    name:"read-only",
+    name: "read-only",
     value: product.ratings,
     readOnly: true,
     precision: 0.5,
@@ -20,7 +20,10 @@ const ProductCard = ({ product }) => {
           ({product.numOfReviews} Reviews)
         </span>
       </div>
-      <span>{`₹${product.price}`}</span>
+      <span>
+        {`₹${product.sellingPrice}`}{" "}
+        <s className="strikeThrough">{`${product.originalPrice}`}</s>
+      </span>
     </Link>
   );
 };

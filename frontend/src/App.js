@@ -42,14 +42,21 @@ import ProductReviews from "./component/Admin/ProductReviews";
 import Contact from "./component/layout/Contact/Contact";
 import About from "./component/layout/About/About";
 import NotFound from "./component/layout/NotFound/NotFound";
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
 import Category from "./component/Admin/Category";
+import VendorsList from "./component/Admin/VendorsList";
+import AdminsList from "./component/Admin/AdminsList";
+import Discount from "./component/Admin/Discount";
+import VendorDashboard from "./component/Vendor/VendorDashboard";
+import NewProductVendor from "./component/Vendor/NewProductVendor";
+import VendorProductList from "./component/Vendor/VendorProductList";
+import VendorUpdateProduct from "./component/Vendor/VendorUpdateProduct";
 
 function App() {
   const { isAuthenticated, user } = useSelector((state) => state.user);
 
   const [stripeApiKey, setStripeApiKey] = useState("");
-  const[open,setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   async function getStripeApiKey() {
     const { data } = await axios.get("/api/v1/stripeApiKey");
@@ -58,7 +65,7 @@ function App() {
   }
   const openCloseMenu = () => {
     setOpen(!open);
-  }
+  };
 
   useEffect(() => {
     WebFont.load({
@@ -66,11 +73,10 @@ function App() {
         families: ["Roboto", "Droid Sans", "Chilanka"],
       },
     });
-    
+
     store.dispatch(loadUser());
 
     getStripeApiKey();
-
   }, []);
 
   // useEffect(() => {
@@ -79,94 +85,191 @@ function App() {
 
   return (
     <Router>
-      {
-        (window.innerWidth>600)?(
-          <Header/>
-        ):(
-          <div className="headerBg">
-            {open===true? (
-              <div>
-                <MenuIcon style={{color:"white", margin:"0.5rem"}} onClick={openCloseMenu}/>
-                <Header/>
-              </div>
-            ) : (
-              <MenuIcon style={{color:"white", margin:"0.5rem"}} onClick={openCloseMenu}/>
-            )}
-          </div>
-        )
-      }
-      
+      {window.innerWidth > 600 ? (
+        <Header />
+      ) : (
+        <div className="headerBg">
+          {open === true ? (
+            <div>
+              <MenuIcon
+                style={{ color: "white", margin: "0.5rem" }}
+                onClick={openCloseMenu}
+              />
+              <Header />
+            </div>
+          ) : (
+            <MenuIcon
+              style={{ color: "white", margin: "0.5rem" }}
+              onClick={openCloseMenu}
+            />
+          )}
+        </div>
+      )}
+
       {isAuthenticated && <UserOptions user={user} />}
 
       {stripeApiKey && (
         <Elements stripe={loadStripe(stripeApiKey)}>
           <Routes>
-            <Route path="/process/payment" element={<Payment/>}/>
+            <Route path="/process/payment" element={<Payment />} />
           </Routes>
         </Elements>
       )}
       <Routes>
-            <Route path="/" element={<Home/>} />
-            <Route path="/product/:id" element={<ProductDetails/>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
 
-            <Route path="/products" element={<Products/>} />
+        <Route path="/products" element={<Products />} />
 
-            <Route path="/products/:keyword" element={<Products/>} />
+        <Route path="/products/:keyword" element={<Products />} />
 
-            <Route path="/search" element={<Search/>} />
+        <Route path="/search" element={<Search />} />
 
-            <Route path="/contact" element={<Contact/>} />
+        <Route path="/contact" element={<Contact />} />
 
-            <Route path="/about" element={<About/>} />
+        <Route path="/about" element={<About />} />
 
-            <Route path="/account" element={<ProtectedRoute Component={Profile}/>}/>
+        <Route
+          path="/account"
+          element={<ProtectedRoute Component={Profile} />}
+        />
 
-            <Route path="/me/update" element={<ProtectedRoute Component={UpdateProfile}/>}/>
+        <Route
+          path="/me/update"
+          element={<ProtectedRoute Component={UpdateProfile} />}
+        />
 
-            <Route path="/password/update" element={<ProtectedRoute Component={UpdatePassword}/>}/>
+        <Route
+          path="/password/update"
+          element={<ProtectedRoute Component={UpdatePassword} />}
+        />
 
-            <Route path="/password/forgot" element={<ForgotPassword/>} />
+        <Route path="/password/forgot" element={<ForgotPassword />} />
 
-            <Route path="/password/reset/:token" element={<ResetPassword/>} />
+        <Route path="/password/reset/:token" element={<ResetPassword />} />
 
-            <Route path="/login" element={<LoginSignUp/>} />
+        <Route path="/login" element={<LoginSignUp />} />
 
-            <Route path="/cart" element={<Cart/>} />
+        <Route path="/cart" element={<Cart />} />
 
-            <Route path="/shipping" element={<ProtectedRoute Component={Shipping}/>}/>
+        <Route
+          path="/shipping"
+          element={<ProtectedRoute Component={Shipping} />}
+        />
 
-            <Route path="/order/:id" element={<ProtectedRoute Component={OrderDetails}/>}/>
+        <Route
+          path="/order/:id"
+          element={<ProtectedRoute Component={OrderDetails} />}
+        />
 
-            <Route path="/order/confirm" element={<ProtectedRoute Component={ConfirmOrder}/>}/>
+        <Route
+          path="/order/confirm"
+          element={<ProtectedRoute Component={ConfirmOrder} />}
+        />
 
-            <Route path="/orders" element={<ProtectedRoute Component={MyOrders}/>}/>
+        <Route
+          path="/orders"
+          element={<ProtectedRoute Component={MyOrders} />}
+        />
 
-            <Route path="/success" element={<ProtectedRoute Component={OrderSuccess}/>}/>
+        <Route
+          path="/success"
+          element={<ProtectedRoute Component={OrderSuccess} />}
+        />
 
-            <Route path="/admin/dashboard" element={<ProtectedRoute isAdmin={true} Component={Dashboard}/>}/>
+        <Route
+          path="/admin/dashboard"
+          element={<ProtectedRoute isAdmin={true} Component={Dashboard} />}
+        />
 
-            <Route path="/admin/order/:id" element={<ProtectedRoute isAdmin={true} Component={ProcessOrder}/>}/>
+        <Route
+          path="/admin/order/:id"
+          element={<ProtectedRoute isAdmin={true} Component={ProcessOrder} />}
+        />
 
-            <Route path="/admin/orders" element={<ProtectedRoute isAdmin={true} Component={OrderList}/>}/>
+        <Route
+          path="/admin/orders"
+          element={<ProtectedRoute isAdmin={true} Component={OrderList} />}
+        />
 
-            <Route path="/admin/product/:id" element={<ProtectedRoute isAdmin={true} Component={UpdateProduct}/>}/>
+        <Route
+          path="/admin/product/:id"
+          element={<ProtectedRoute isAdmin={true} Component={UpdateProduct} />}
+        />
 
-            <Route path="/admin/product" element={<ProtectedRoute isAdmin={true} Component={NewProduct}/>}/>
+        <Route
+          path="/admin/product"
+          element={<ProtectedRoute isAdmin={true} Component={NewProduct} />}
+        />
 
-            <Route path="/admin/products" element={<ProtectedRoute isAdmin={true} Component={ProductList}/>}/>
+        <Route
+          path="/admin/products"
+          element={<ProtectedRoute isAdmin={true} Component={ProductList} />}
+        />
 
-            <Route path="/admin/reviews" element={<ProtectedRoute isAdmin={true} Component={ProductReviews}/>}/>
+        <Route
+          path="/admin/reviews"
+          element={<ProtectedRoute isAdmin={true} Component={ProductReviews} />}
+        />
 
-            <Route path="/admin/user/:id" element={<ProtectedRoute isAdmin={true} Component={UpdateUser}/>}/>
+        <Route
+          path="/admin/user/:id"
+          element={<ProtectedRoute isAdmin={true} Component={UpdateUser} />}
+        />
 
-            <Route path="/admin/users" element={<ProtectedRoute isAdmin={true} Component={UsersList}/>}/>
+        <Route
+          path="/admin/users"
+          element={<ProtectedRoute isAdmin={true} Component={UsersList} />}
+        />
 
-            <Route path="/admin/category" element={<ProtectedRoute isAdmin={true} Component={Category}/>}/>
+        <Route
+          path="/admin/vendors"
+          element={<ProtectedRoute isAdmin={true} Component={VendorsList} />}
+        />
 
-            <Route path="*" element={
-                window.location.pathname === "/process/payment" ? null : <NotFound/>
-              }
-          />
+        <Route
+          path="/admin/admins"
+          element={<ProtectedRoute isAdmin={true} Component={AdminsList} />}
+        />
+
+        <Route
+          path="/admin/category"
+          element={<ProtectedRoute isAdmin={true} Component={Category} />}
+        />
+
+        <Route
+          path="/admin/discount"
+          element={<ProtectedRoute isAdmin={true} Component={Discount} />}
+        />
+
+        <Route
+          path="/vendor/dashboard"
+          element={<ProtectedRoute Component={VendorDashboard} />}
+        />
+
+        <Route
+          path="/vendor/product/new"
+          element={<ProtectedRoute Component={NewProductVendor} />}
+        />
+
+        <Route
+          path="/vendor/products"
+          element={<ProtectedRoute Component={VendorProductList} />}
+        />
+
+        <Route
+          path="/vendor/product/:id"
+          element={<ProtectedRoute Component={VendorUpdateProduct} />}
+        />
+
+        <Route
+          path="*"
+          element={
+            window.location.pathname === "/process/payment" ? null : (
+              <NotFound />
+            )
+          }
+        />
       </Routes>
       <Footer />
     </Router>
@@ -174,7 +277,3 @@ function App() {
 }
 
 export default App;
-
-// Notes
-// 2. Different Loader
-// 1. Remove filter ho ya kuch bhi ho to go to page 1

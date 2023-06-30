@@ -14,10 +14,9 @@ import {
   clearErrors,
 } from "../../actions/userAction";
 import Loader from "../layout/Loader/Loader";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from "react-router-dom";
 
 const UpdateUser = () => {
-
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -64,13 +63,7 @@ const UpdateUser = () => {
   const updateUserSubmitHandler = (e) => {
     e.preventDefault();
 
-    const myForm = new FormData();
-
-    myForm.set("name", name);
-    myForm.set("email", email);
-    myForm.set("role", role);
-
-    dispatch(updateUser(userId, myForm));
+    dispatch(updateUser(userId, name, email, role));
   };
 
   return (
@@ -84,8 +77,7 @@ const UpdateUser = () => {
           ) : (
             <form
               className="createProductForm"
-              onSubmit={updateUserSubmitHandler}
-            >
+              onSubmit={updateUserSubmitHandler}>
               <h1>Update User</h1>
 
               <div>
@@ -115,6 +107,7 @@ const UpdateUser = () => {
                   <option value="">Choose Role</option>
                   <option value="admin">Admin</option>
                   <option value="user">User</option>
+                  <option value="vendor">Vendor</option>
                 </select>
               </div>
 
@@ -123,8 +116,7 @@ const UpdateUser = () => {
                 type="submit"
                 disabled={
                   updateLoading ? true : false || role === "" ? true : false
-                }
-              >
+                }>
                 Update
               </Button>
             </form>

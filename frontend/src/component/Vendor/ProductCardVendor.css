@@ -1,0 +1,29 @@
+.vendorProductList {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+
+.vendorProductList > div > img {
+  height: 200px;
+  width: 200px;
+  margin: 0 4rem;
+}
+
+.vendorProductList > div > p {
+  display: flex;
+  margin: 0 4rem;
+  font-size: 1.2rem;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0.2rem;
+  width: 35rem;
+}
+
+.vendorProductList > div > p > p {
+  font-weight: 400;
+}
+
+hr {
+  margin-bottom: 1rem;
+}

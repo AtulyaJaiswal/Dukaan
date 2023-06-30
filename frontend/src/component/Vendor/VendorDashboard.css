@@ -1,0 +1,13 @@
+.dashboardMain {
+  width: 100vw;
+  max-width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  position: absolute;
+}
+.vendorDashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

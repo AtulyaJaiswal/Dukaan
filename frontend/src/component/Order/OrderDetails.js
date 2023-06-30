@@ -4,10 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import MetaData from "../layout/MetaData";
 import { Link, useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
-import { getOrderDetails, clearErrors, deleteOrder } from "../../actions/orderAction";
+import {
+  getOrderDetails,
+  clearErrors,
+  deleteOrder,
+} from "../../actions/orderAction";
 import Loader from "../layout/Loader/Loader";
 import { toast } from "react-toastify";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 const OrderDetails = () => {
   const { order, error, loading } = useSelector((state) => state.orderDetails);
@@ -19,8 +23,8 @@ const OrderDetails = () => {
 
   const deleteOrderWithId = () => {
     dispatch(deleteOrder(id));
-    toast.success("Order is cancelled")
-    navigate("/orders")
+    toast.success("Order is cancelled");
+    navigate("/orders");
   };
 
   useEffect(() => {
@@ -76,8 +80,7 @@ const OrderDetails = () => {
                       order.paymentInfo.status === "succeeded"
                         ? "greenColor"
                         : "redColor"
-                    }
-                  >
+                    }>
                     {order.paymentInfo &&
                     order.paymentInfo.status === "succeeded"
                       ? "PAID"
@@ -99,14 +102,17 @@ const OrderDetails = () => {
                       order.orderStatus && order.orderStatus === "Delivered"
                         ? "greenColor"
                         : "redColor"
-                    }
-                  >
+                    }>
                     {order.orderStatus && order.orderStatus}
                   </p>
                 </div>
               </div>
             </div>
-            <button onClick={deleteOrderWithId} className="deleteOrderBtn">Cancel Order</button>
+            {order.orderStatus && order.orderStatus !== "Delivered" && (
+              <button onClick={deleteOrderWithId} className="deleteOrderBtn">
+                Cancel Order
+              </button>
+            )}
 
             <div className="orderDetailsCartItems">
               <Typography>Order Items:</Typography>

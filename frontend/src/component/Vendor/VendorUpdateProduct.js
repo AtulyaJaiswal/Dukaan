@@ -13,11 +13,11 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import StorageIcon from "@mui/icons-material/Storage";
 import SpellcheckIcon from "@mui/icons-material/Spellcheck";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import Sidebar from "./Sidebar";
+import VendorSidebar from "./VendorSidebar";
 import { UPDATE_PRODUCT_RESET } from "../../constants/productConstants";
 import { useParams, useNavigate } from "react-router-dom";
 
-const UpdateProduct = () => {
+const VendorUpdateProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -133,7 +133,7 @@ const UpdateProduct = () => {
     <Fragment>
       <MetaData title="Create Product" />
       <div className="dashboard">
-        <Sidebar />
+        <VendorSidebar />
         <div className="newProductContainer">
           <form
             className="createProductForm"
@@ -244,4 +244,4 @@ const UpdateProduct = () => {
   );
 };
 
-export default UpdateProduct;
+export default VendorUpdateProduct;

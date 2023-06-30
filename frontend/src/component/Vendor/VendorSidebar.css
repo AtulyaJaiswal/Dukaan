@@ -1,0 +1,27 @@
+.vendorSidebar {
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  flex-direction: column;
+  padding: 4rem 0;
+}
+
+.vendorSidebar a {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.493);
+  font: 200 1rem "Roboto";
+  padding: 2rem;
+  transition: all 0.5s;
+}
+
+.vendorSidebar a:hover {
+  color: rgba(8, 8, 211, 0.781);
+  transform: scale(1.1);
+}
+
+.vendorSidebar a > P {
+  display: flex;
+  align-items: center;
+}
+.vendorSidebar a > p > svg {
+  margin-right: 0.5rem;
+}

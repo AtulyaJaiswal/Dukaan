@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef } from "react";
 import CheckoutSteps from "../Cart/CheckoutSteps";
 import { useSelector, useDispatch } from "react-redux";
 import MetaData from "../layout/MetaData";
-import { Typography } from '@mui/material';
+import { Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import {
   CardNumberElement, //verify card number
@@ -24,7 +24,7 @@ const Payment = () => {
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
 
   const navigate = useNavigate();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const stripe = useStripe();
   const elements = useElements();
   const payBtn = useRef(null);
@@ -107,7 +107,6 @@ const Payment = () => {
       toast.error(error.response.data.message);
     }
   };
-
 
   useEffect(() => {
     if (error) {

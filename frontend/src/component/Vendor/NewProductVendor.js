@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import "./NewProduct.css";
+import "./NewProductVendor.css";
 import { useSelector, useDispatch } from "react-redux";
 import {
   clearErrors,
@@ -14,12 +14,12 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import StorageIcon from "@mui/icons-material/Storage";
 import SpellcheckIcon from "@mui/icons-material/Spellcheck";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import SideBar from "./Sidebar";
+import VendorSidebar from "./VendorSidebar";
 import { NEW_PRODUCT_RESET } from "../../constants/productConstants";
 import { useNavigate } from "react-router-dom";
 import Loader from "../layout/Loader/Loader";
 
-const NewProduct = () => {
+const NewProductVendor = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -109,7 +109,7 @@ const NewProduct = () => {
         <Fragment>
           <MetaData title="Create Product" />
           <div className="dashboard">
-            <SideBar />
+            <VendorSidebar />
             <div className="newProductContainer">
               <form
                 className="createProductForm"
@@ -213,4 +213,4 @@ const NewProduct = () => {
   );
 };
 
-export default NewProduct;
+export default NewProductVendor;

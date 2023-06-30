@@ -1,5 +1,5 @@
 import React from "react";
-import "./Sidebar.css";
+import "./VendorSidebar.css";
 // import logo from "../../images/logo.png";
 import { Link } from "react-router-dom";
 import { TreeView, TreeItem } from "@mui/lab";
@@ -15,13 +15,13 @@ import CategoryIcon from "@mui/icons-material/Category";
 import DiscountIcon from "@mui/icons-material/Discount";
 import Logo from "../../Images/logo.webp";
 
-const Sidebar = () => {
+const VendorSidebar = () => {
   return (
-    <div className="sidebar">
-      <Link to="/">
+    <div className="vendorSidebar">
+      {/* <Link to="/">
         <img src={Logo} alt="Ecommerce" />
-      </Link>
-      <Link to="/admin/dashboard">
+      </Link> */}
+      <Link to="/vendor/dashboard">
         <p>
           <DashboardIcon /> Dashboard
         </p>
@@ -31,57 +31,17 @@ const Sidebar = () => {
         defaultCollapseIcon={<ExpandMoreIcon />}
         defaultExpandIcon={<ImportExportIcon />}>
         <TreeItem nodeId="1" label="Products">
-          <Link to="/admin/products">
-            <TreeItem nodeId="2" label="All" icon={<PostAddIcon />} />
+          <Link to="/vendor/products">
+            <TreeItem nodeId="2" label="Edit" icon={<PostAddIcon />} />
           </Link>
 
-          <Link to="/admin/product">
+          <Link to="/vendor/product/new">
             <TreeItem nodeId="3" label="Create" icon={<AddIcon />} />
           </Link>
         </TreeItem>
       </TreeView>
-
-      <Link to="/admin/orders">
-        <p>
-          <ListAltIcon />
-          Orders
-        </p>
-      </Link>
-      <Link to="/admin/users">
-        <p>
-          <PeopleIcon /> Users
-        </p>
-      </Link>
-      <Link to="/admin/vendors">
-        <p>
-          <PeopleIcon /> Vendors
-        </p>
-      </Link>
-      <Link to="/admin/admins">
-        <p>
-          <PeopleIcon /> Admins
-        </p>
-      </Link>
-      <Link to="/admin/reviews">
-        <p>
-          <RateReviewIcon />
-          Reviews
-        </p>
-      </Link>
-      <Link to="/admin/category">
-        <p>
-          <CategoryIcon />
-          Category
-        </p>
-      </Link>
-      <Link to="/admin/discount">
-        <p>
-          <DiscountIcon />
-          Discount
-        </p>
-      </Link>
     </div>
   );
 };
 
-export default Sidebar;
+export default VendorSidebar;

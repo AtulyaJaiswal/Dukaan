@@ -47,208 +47,214 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAIL,
+  CREATE_DISCOUNT_CARD_REQUEST,
+  CREATE_DISCOUNT_CARD_SUCCESS,
+  CREATE_DISCOUNT_CARD_FAIL,
+  GET_ALL_DISCOUNT_REQUEST,
+  GET_ALL_DISCOUNT_SUCCESS,
+  GET_ALL_DISCOUNT_FAIL,
+  DELETE_DISCOUNT_CARD_REQUEST,
+  DELETE_DISCOUNT_CARD_SUCCESS,
+  DELETE_DISCOUNT_CARD_FAIL,
   CLEAR_ERRORS,
 } from "../constants/userConstants";
 
+export const userReducer = (state = { user: {} }, action) => {
+  switch (action.type) {
+    case LOGIN_REQUEST:
+    case REGISTER_USER_REQUEST:
+    case LOAD_USER_REQUEST:
+    case REGISTER_USER_PASSWORD_REQUEST:
+    case LOGIN_PASSWORD_REQUEST:
+      return {
+        loading: true,
+        isAuthenticated: false,
+      };
+    case LOGIN_SUCCESS:
+    case REGISTER_USER_SUCCESS:
+    case LOAD_USER_SUCCESS:
+    case REGISTER_USER_PASSWORD_SUCCESS:
+    case LOGIN_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: true,
+        user: action.payload,
+      };
+    case LOGOUT_SUCCESS:
+      return {
+        loading: false,
+        user: null,
+        isAuthenticated: false,
+      };
+    case LOGIN_FAIL:
+    case REGISTER_USER_FAIL:
+    case REGISTER_USER_PASSWORD_FAIL:
+    case LOGIN_PASSWORD_FAIL:
+      return {
+        ...state,
+        loading: false,
+        isAuthenticated: false,
+        user: null,
+        error: action.payload,
+      };
+    case LOAD_USER_FAIL:
+      return {
+        loading: false,
+        isAuthenticated: false,
+        user: null,
+        error: action.payload,
+      };
+    case LOGOUT_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
 
-export const userReducer = (state = {user: {} }, action) => {
-
-    switch (action.type) {
-        case LOGIN_REQUEST:
-        case REGISTER_USER_REQUEST:
-        case LOAD_USER_REQUEST:
-        case REGISTER_USER_PASSWORD_REQUEST:
-        case LOGIN_PASSWORD_REQUEST:
-            return{
-                loading: true,
-                isAuthenticated: false
-            };
-        case LOGIN_SUCCESS:
-        case REGISTER_USER_SUCCESS:
-        case LOAD_USER_SUCCESS:
-        case REGISTER_USER_PASSWORD_SUCCESS:
-        case LOGIN_PASSWORD_SUCCESS:
-            return{
-                ...state,
-                loading: false,
-                isAuthenticated: true,
-                user: action.payload,
-            };
-        case LOGOUT_SUCCESS:
-          return {
-            loading: false,
-            user: null,
-            isAuthenticated: false,
-          };
-        case LOGIN_FAIL:
-        case REGISTER_USER_FAIL:
-        case REGISTER_USER_PASSWORD_FAIL:
-        case LOGIN_PASSWORD_FAIL:
-            return{
-                ...state,
-                loading: false,
-                isAuthenticated: false,
-                user: null,
-                error: action.payload
-            };
-        case LOAD_USER_FAIL:
-            return{
-                loading: false,
-                isAuthenticated: false,
-                user: null,
-                error: action.payload
-            };
-        case LOGOUT_FAIL:
-            return {
-              ...state,
-              loading: false,
-              error: action.payload,
-            };
-        case CLEAR_ERRORS:
-        return{
-            ...state,
-            error: null,
-        };
-    
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 };
 
-export const otpReducer = (state = {user: {} }, action) => {
-
+export const otpReducer = (state = { user: {} }, action) => {
   switch (action.type) {
-      case SEND_OTP_REQUEST:
-          return{
-              loading: true,
-          };
-      case SEND_OTP_SUCCESS:
-          return{
-              ...state,
-              loading: false,
-              data: action.payload,
-          };
-      case SEND_OTP_FAIL:
-          return{
-              ...state,
-              loading: false,
-              error: action.payload
-          };
-      case CLEAR_ERRORS:
-      return{
-          ...state,
-          error: null,
+    case SEND_OTP_REQUEST:
+      return {
+        loading: true,
       };
-  
-      default:
-          return state;
+    case SEND_OTP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        data: action.payload,
+      };
+    case SEND_OTP_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
   }
 };
 
 export const profileReducer = (state = {}, action) => {
-    switch (action.type) {
-      case UPDATE_PROFILE_REQUEST:
-      case UPDATE_PASSWORD_REQUEST:
-      case UPDATE_USER_REQUEST:
-      case DELETE_USER_REQUEST:
-        return {
-          ...state,
-          loading: true,
-        };
-      case UPDATE_PROFILE_SUCCESS:
-      case UPDATE_PASSWORD_SUCCESS:
-      case UPDATE_USER_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          isUpdated: action.payload,
-        };
-  
-      case DELETE_USER_SUCCESS:
-        return {
-          ...state,
-          loading: false,
-          isDeleted: action.payload.success,
-          message: action.payload.message,
-        };
-  
-      case UPDATE_PROFILE_FAIL:
-      case UPDATE_PASSWORD_FAIL:
-      case UPDATE_USER_FAIL:
-      case DELETE_USER_FAIL:
-        return {
-          ...state,
-          loading: false,
-          error: action.payload,
-        };
-  
-      case UPDATE_PROFILE_RESET:
-      case UPDATE_PASSWORD_RESET:
-      case UPDATE_USER_RESET:
-        return {
-          ...state,
-          isUpdated: false,
-        };
-  
-      case DELETE_USER_RESET:
-        return {
-          ...state,
-          isDeleted: false,
-        };
-  
-      case CLEAR_ERRORS:
-        return {
-          ...state,
-          error: null,
-        };
-  
-      default:
-        return state;
-    }
-  };
+  switch (action.type) {
+    case UPDATE_PROFILE_REQUEST:
+    case UPDATE_PASSWORD_REQUEST:
+    case UPDATE_USER_REQUEST:
+    case DELETE_USER_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case UPDATE_PROFILE_SUCCESS:
+    case UPDATE_PASSWORD_SUCCESS:
+    case UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isUpdated: action.payload,
+      };
+
+    case DELETE_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        isDeleted: action.payload.success,
+        message: action.payload.message,
+      };
+
+    case UPDATE_PROFILE_FAIL:
+    case UPDATE_PASSWORD_FAIL:
+    case UPDATE_USER_FAIL:
+    case DELETE_USER_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    case UPDATE_PROFILE_RESET:
+    case UPDATE_PASSWORD_RESET:
+    case UPDATE_USER_RESET:
+      return {
+        ...state,
+        isUpdated: false,
+      };
+
+    case DELETE_USER_RESET:
+      return {
+        ...state,
+        isDeleted: false,
+      };
+
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
 
 export const forgotPasswordReducer = (state = {}, action) => {
-    switch (action.type) {
-        case FORGOT_PASSWORD_REQUEST:
-        case RESET_PASSWORD_REQUEST:
-        return {
-            ...state,
-            loading: true,
-            error: null,
-        };
-        case FORGOT_PASSWORD_SUCCESS:
-        return {
-            ...state,
-            loading: false,
-            message: action.payload,
-        };
+  switch (action.type) {
+    case FORGOT_PASSWORD_REQUEST:
+    case RESET_PASSWORD_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case FORGOT_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        message: action.payload,
+      };
 
-        case RESET_PASSWORD_SUCCESS:
-        return {
-            ...state,
-            loading: false,
-            success: action.payload,
-        };
+    case RESET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        success: action.payload,
+      };
 
-        case FORGOT_PASSWORD_FAIL:
-        case RESET_PASSWORD_FAIL:
-        return {
-            ...state,
-            loading: false,
-            error: action.payload,
-        };
+    case FORGOT_PASSWORD_FAIL:
+    case RESET_PASSWORD_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
-        case CLEAR_ERRORS:
-        return {
-            ...state,
-            error: null,
-        };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
 
-        default:
-        return state;
-    }
+    default:
+      return state;
+  }
 };
-  
+
 export const allUsersReducer = (state = { users: [] }, action) => {
   switch (action.type) {
     case ALL_USERS_REQUEST:
@@ -296,6 +302,74 @@ export const userDetailsReducer = (state = { user: {} }, action) => {
       };
 
     case USER_DETAILS_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const createDeleteDiscountCardReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CREATE_DISCOUNT_CARD_REQUEST:
+    case DELETE_DISCOUNT_CARD_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case CREATE_DISCOUNT_CARD_SUCCESS:
+    case DELETE_DISCOUNT_CARD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        message: action.payload,
+      };
+
+    case CREATE_DISCOUNT_CARD_FAIL:
+    case DELETE_DISCOUNT_CARD_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+        message: null,
+      };
+
+    default:
+      return state;
+  }
+};
+
+export const getAllDiscountCardReducer = (state = { discount: [] }, action) => {
+  switch (action.type) {
+    case GET_ALL_DISCOUNT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_ALL_DISCOUNT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        discount: action.payload,
+      };
+
+    case GET_ALL_DISCOUNT_FAIL:
       return {
         ...state,
         loading: false,

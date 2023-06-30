@@ -12,7 +12,7 @@ import SideBar from "./Sidebar";
 import { getAllUsers, clearErrors, deleteUser } from "../../actions/userAction";
 import { DELETE_USER_RESET } from "../../constants/userConstants";
 
-const UsersList = () => {
+const VendorsList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -106,7 +106,7 @@ const UsersList = () => {
 
   users &&
     users.forEach((item) => {
-      item.role === "user" &&
+      item.role === "vendor" &&
         rows.push({
           id: item._id,
           role: item.role,
@@ -122,7 +122,7 @@ const UsersList = () => {
       <div className="dashboard">
         <SideBar />
         <div className="productListContainer">
-          <h1 id="productListHeading">ALL USERS</h1>
+          <h1 id="productListHeading">ALL VENDORS</h1>
 
           <DataGrid
             rows={rows}
@@ -138,4 +138,4 @@ const UsersList = () => {
   );
 };
 
-export default UsersList;
+export default VendorsList;

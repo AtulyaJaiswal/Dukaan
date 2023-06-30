@@ -1,95 +1,115 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import Carousel from 'react-material-ui-carousel';
-import './ProductDetails.css';
+import React, { Fragment, useEffect, useState } from "react";
+import Carousel from "react-material-ui-carousel";
+import "./ProductDetails.css";
 import { useSelector, useDispatch } from "react-redux";
-import { clearErrors, getProductDetails, newReview, } from '../../actions/productAction';
+import {
+  clearErrors,
+  getProductDetails,
+  newReview,
+} from "../../actions/productAction";
 import ReviewCard from "./ReviewCard.js";
 import MetaData from "../layout/MetaData";
 import Loader from "../layout/Loader/Loader";
-import Rating from '@mui/material/Rating';
-import {toast} from "react-toastify";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+import Rating from "@mui/material/Rating";
+import { toast } from "react-toastify";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import { addItemsToCart } from "../../actions/cartAction";
 import { NEW_REVIEW_RESET } from "../../constants/productConstants";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 const ProductDetails = () => {
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch();
+  const { id } = useParams();
 
-    const { id } = useParams();
-    console.log(id);
+  const { product, loading, error } = useSelector(
+    (state) => state.productDetails
+  );
 
-    const {product,loading,error} = useSelector((state) => state.productDetails)
+  const { success, error: reviewError } = useSelector(
+    (state) => state.newReview
+  );
 
-    const { success, error: reviewError } = useSelector(
-        (state) => state.newReview
-      );
-    
-      const options = {
-        size: "large",
-        value: product.ratings,
-        readOnly: true,
-        precision: 0.5,
-      };
-    
-      const [quantity, setQuantity] = useState(1);
-      const [open, setOpen] = useState(false);
-      const [rating, setRating] = useState(0);
-      const [comment, setComment] = useState("");
-    
-      const increaseQuantity = () => {
-        if (product.Stock <= quantity) return;
-    
-        const qty = quantity + 1;
-        setQuantity(qty);
-      };
-    
-      const decreaseQuantity = () => {
-        if (1 >= quantity) return;
-    
-        const qty = quantity - 1;
-        setQuantity(qty);
-      };
-    
-      const addToCartHandler = () => {
-        dispatch(addItemsToCart(id, quantity));
-        toast.success("Item Added To Cart");
-      };
-    
-      const submitReviewToggle = () => {
-        open ? setOpen(false) : setOpen(true);
-      };
-    
-      const reviewSubmitHandler = () => {
-        const myForm = new FormData();
-    
-        myForm.set("rating", rating);
-        myForm.set("comment", comment);
-        myForm.set("productId", id);
-    
-        dispatch(newReview(myForm));
-    
-        setOpen(false);
-      };
-    
-      useEffect(() => {
-        if (error) {
-          toast.error(error);
-          dispatch(clearErrors());
-        }
-    
-        if (reviewError) {
-          toast.error(reviewError);
-          dispatch(clearErrors());
-        }
-    
-        if (success) {
-          toast.success("Review Submitted Successfully");
-          dispatch({ type: NEW_REVIEW_RESET });
-        }
-        dispatch(getProductDetails(id));
-      }, [dispatch, id, error, reviewError, success]);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+
+  const options = {
+    size: "large",
+    value: product.ratings,
+    readOnly: true,
+    precision: 0.5,
+  };
+
+  const [quantity, setQuantity] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+
+  const increaseQuantity = () => {
+    if (product.Stock <= quantity) return;
+
+    const qty = quantity + 1;
+    setQuantity(qty);
+  };
+
+  const decreaseQuantity = () => {
+    if (1 >= quantity) return;
+
+    const qty = quantity - 1;
+    setQuantity(qty);
+  };
+
+  const addToCartHandler = () => {
+    if (!isAuthenticated) {
+      return toast.error("Login First");
+    }
+
+    dispatch(addItemsToCart(product, quantity, user._id));
+    toast.success("Item Added To Cart");
+  };
+
+  const submitReviewToggle = () => {
+    open ? setOpen(false) : setOpen(true);
+  };
+
+  const reviewSubmitHandler = () => {
+    const myForm = new FormData();
+
+    myForm.set("rating", rating);
+    myForm.set("comment", comment);
+    myForm.set("productId", id);
+
+    dispatch(newReview(myForm));
+
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearErrors());
+    }
+
+    if (reviewError) {
+      toast.error(reviewError);
+      dispatch(clearErrors());
+    }
+
+    if (success) {
+      toast.success("Review Submitted Successfully");
+      dispatch({ type: NEW_REVIEW_RESET });
+    }
+    if (isAuthenticated) {
+      dispatch(getProductDetails(id, user._id));
+    } else {
+      dispatch(getProductDetails(id, undefined));
+    }
+  }, [dispatch, id, error, reviewError, success]);
 
   return (
     <Fragment>
@@ -99,8 +119,11 @@ const ProductDetails = () => {
         <Fragment>
           <MetaData title={`${product.name} -- ECOMMERCE`} />
           <div className="ProductDetails">
-            <div className='carousel_image_set'>
-              <Carousel className='carousel' stopAutoPlayOnHover="true" cycleNavigation="true">
+            <div className="carousel_image_set">
+              <Carousel
+                className="carousel"
+                stopAutoPlayOnHover="true"
+                cycleNavigation="true">
                 {product.images &&
                   product.images.map((item, i) => (
                     <img
@@ -126,7 +149,10 @@ const ProductDetails = () => {
                 </span>
               </div>
               <div className="detailsBlock-3">
-                <h1>{`₹${product.price}`}</h1>
+                <h1>
+                  {`₹${product.sellingPrice}`}{" "}
+                  <s className="strikeThrough">{`${product.originalPrice}`}</s>
+                </h1>
                 <div className="detailsBlock-3-1">
                   <div className="detailsBlock-3-1-1">
                     <button onClick={decreaseQuantity}>-</button>
@@ -135,8 +161,7 @@ const ProductDetails = () => {
                   </div>
                   <button
                     disabled={product.Stock < 1 ? true : false}
-                    onClick={addToCartHandler}
-                  >
+                    onClick={addToCartHandler}>
                     Add to Cart
                   </button>
                 </div>
@@ -144,7 +169,9 @@ const ProductDetails = () => {
                 <p>
                   Status:
                   <b className={product.Stock < 1 ? "redColor" : "greenColor"}>
-                    {product.Stock < 1 ? "OutOfStock" : `  InStock (${product.Stock} remaining)`}
+                    {product.Stock < 1
+                      ? "OutOfStock"
+                      : `  InStock (${product.Stock} remaining)`}
                   </b>
                 </p>
               </div>
@@ -164,8 +191,7 @@ const ProductDetails = () => {
           <Dialog
             aria-labelledby="simple-dialog-title"
             open={open}
-            onClose={submitReviewToggle}
-          >
+            onClose={submitReviewToggle}>
             <DialogTitle>Submit Review</DialogTitle>
             <DialogContent className="submitDialog">
               <Rating
@@ -179,8 +205,7 @@ const ProductDetails = () => {
                 cols="30"
                 rows="5"
                 value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              ></textarea>
+                onChange={(e) => setComment(e.target.value)}></textarea>
             </DialogContent>
             <DialogActions>
               <Button onClick={submitReviewToggle} color="secondary">
@@ -205,7 +230,7 @@ const ProductDetails = () => {
         </Fragment>
       )}
     </Fragment>
-  )
-}
+  );
+};
 
-export default ProductDetails
+export default ProductDetails;
