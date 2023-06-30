@@ -11,7 +11,7 @@ To run
 2. npm run dev (for backend)
 
 New Terminal (for frontend)
-4. cd frontend
-5. npm start
+1. cd frontend
+2. npm start
 
  
