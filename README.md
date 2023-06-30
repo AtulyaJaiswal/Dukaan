@@ -1,6 +1,6 @@
 # spensehiring
 For set-up
-1. git clone folder_name
+1. git clone link folder_name
 2. cd folder_name
 3. npm i
 4. cd frontend
