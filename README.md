@@ -9,9 +9,9 @@ For set-up
 To run
 1. cd folder_name
 2. npm run dev (for backend)
-   
- New Terminal (for frontend)
-3. cd frontend
-4. npm start
+
+New Terminal (for frontend)
+4. cd frontend
+5. npm start
 
  
